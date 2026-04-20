@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дорожная карта 90 дней — Darsy 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+@import url('https://fonts.bunny.net/css?family=cormorant-garamond:400,600,700,700i|dm-sans:400,500,600');
+:root{--c:#FAF7F2;--d:#1A0A2E;--g:#C8964A;--p:#3D1A6B;--s:#8A8A9A;--l:#EAE4F5;--ok:#1A7A3A;--no:#AA2828;--wr:#E65100;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--c);color:var(--d);font-family:'DM Sans','Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(250,247,242,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--l);display:flex;align-items:center;}
+.ni{width:100%;max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.nl{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;font-weight:700;color:var(--d);text-decoration:none;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.nl span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);font-weight:600;background:rgba(200,150,74,.13);padding:2px 8px;border-radius:10px;}
+.nls{display:flex;gap:3px;}
+.nls a{font-size:11px;font-weight:500;color:var(--s);text-decoration:none;padding:5px 10px;border-radius:20px;white-space:nowrap;transition:all .18s;}
+.nls a:hover{color:var(--d);background:var(--l);}
+.nls a.on{background:var(--d);color:#fff;}
+.nb{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:8px;border:none;background:none;width:40px;height:40px;flex-shrink:0;}
+.nb span{display:block;width:22px;height:2px;background:var(--d);border-radius:2px;}
+.nm{display:none;flex-direction:column;gap:2px;padding:12px 16px 16px;border-bottom:1px solid var(--l);background:rgba(250,247,242,.98);position:sticky;top:60px;z-index:199;}
+.nm a{font-size:14px;font-weight:500;color:var(--s);text-decoration:none;padding:10px 14px;border-radius:10px;}
+.nm a:hover,.nm a.on{color:var(--d);background:var(--l);}
+.nm.open{display:flex;}
+.hero{background:linear-gradient(140deg,#0A1820 0%,var(--d) 50%,#1E0840 100%);padding:68px 20px 56px;text-align:center;overflow:hidden;}
+.he{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g);margin-bottom:14px;}
+.hero h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(28px,6vw,52px);font-weight:700;color:#fff;line-height:1.08;margin-bottom:16px;word-break:break-word;padding:0 4px;}
+.hero h1 em{color:var(--g);font-style:italic;}
+.hero p{font-size:clamp(13px,3vw,15px);color:rgba(255,255,255,.6);max-width:560px;margin:0 auto 36px;line-height:1.75;}
+.hrow{display:flex;justify-content:center;gap:clamp(12px,3vw,28px);flex-wrap:wrap;}
+.hs{text-align:center;}.hs-v{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,5vw,32px);font-weight:700;color:var(--g);line-height:1;}
+.hs-l{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-top:4px;}
+.hs-sep{width:1px;background:rgba(255,255,255,.12);align-self:stretch;}
+.w{max-width:1280px;margin:0 auto;padding:0 20px;}
+.sec{padding:60px 0;border-top:1px solid var(--l);}
+.sec:first-child{border-top:none;padding-top:52px;}
+.ey{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g);margin-bottom:8px;}
+.sh{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,4vw,38px);font-weight:700;color:var(--d);line-height:1.1;}
+.dv{width:48px;height:3px;background:linear-gradient(90deg,var(--g),transparent);margin:12px 0 18px;border-radius:2px;}
+.sd{color:var(--s);font-size:14px;line-height:1.75;max-width:680px;margin-bottom:28px;}
+
+/* MONTH BLOCKS */
+.months{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:36px;}
+.month{background:white;border-radius:18px;border:1px solid var(--l);overflow:hidden;}
+.month-head{padding:18px 20px 14px;}
+.month-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 9px;border-radius:12px;display:inline-block;margin-bottom:8px;}
+.month-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:700;color:var(--d);}
+.month-focus{font-size:13px;color:var(--s);margin-top:4px;}
+.month-tasks{padding:0 20px 20px;}
+.mt{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #FAF7F2;}
+.mt:last-child{border-bottom:none;}
+.mt-num{font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;font-weight:700;flex-shrink:0;width:24px;line-height:1.2;}
+.mt-body{flex:1;}
+.mt-title{font-size:13px;font-weight:600;color:var(--d);line-height:1.3;margin-bottom:2px;}
+.mt-desc{font-size:12px;color:var(--s);line-height:1.5;}
+.mt-chip{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;margin-top:4px;}
+.month-kpi{background:#FAF7F2;padding:14px 20px;border-top:1px solid var(--l);}
+.month-kpi-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--s);margin-bottom:8px;}
+.kpi-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;}
+.kpi-k{color:var(--s);}
+.kpi-v{font-weight:700;color:var(--d);}
+
+/* P&L TABLE */
+.pl-wrap{overflow-x:auto;margin-bottom:32px;}
+.pl{width:100%;border-collapse:collapse;font-size:13px;min-width:700px;}
+.pl th{background:var(--d);color:rgba(255,255,255,.65);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
+.pl td{padding:10px 14px;border-bottom:1px solid #FAF7F2;vertical-align:top;}
+.pl tr:hover td{background:#FAF7F2;}
+.pl tr:last-child td{border-bottom:none;}
+.pl .section-row td{background:rgba(61,26,107,.05);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--p);}
+.pl .total-row td{background:var(--d);color:#fff;font-weight:700;}
+.pl .total-row td:last-child{color:var(--g);font-size:16px;font-family:'Cormorant Garamond',Georgia,serif;}
+.pos{color:var(--ok);font-weight:600;}
+.neg{color:var(--no);}
+
+/* KPI GRID */
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:32px;}
+.kpi-card{background:white;border-radius:14px;border:1px solid var(--l);padding:20px;}
+.kpi-card-title{font-size:13px;font-weight:600;color:var(--d);margin-bottom:4px;}
+.kpi-card-metric{font-size:11px;color:var(--s);margin-bottom:10px;}
+.kpi-progress{height:6px;background:#FAF7F2;border-radius:3px;overflow:hidden;margin-bottom:6px;}
+.kpi-bar{height:100%;border-radius:3px;}
+.kpi-now{font-size:11px;color:var(--s);}
+.kpi-target{font-size:13px;font-weight:700;}
+
+/* CHART */
+.chart-box{background:white;border-radius:16px;border:1px solid var(--l);padding:22px;margin-bottom:24px;}
+.ct{font-size:14px;font-weight:600;color:var(--d);margin-bottom:3px;}
+.cs{font-size:12px;color:var(--s);margin-bottom:16px;}
+.cw{position:relative;width:100%;height:300px;}
+
+/* FINAL STATEMENT */
+.final{background:var(--d);border-radius:20px;padding:36px;text-align:center;margin-top:40px;}
+.final-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(24px,4vw,36px);font-weight:700;color:#fff;margin-bottom:12px;}
+.final-sub{font-size:15px;color:rgba(255,255,255,.6);max-width:600px;margin:0 auto 24px;line-height:1.75;}
+.final-num{font-family:'Cormorant Garamond',Georgia,serif;font-size:48px;font-weight:700;color:var(--g);line-height:1;}
+.final-num-l{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.45);margin-top:4px;}
+
+.nav-btns{display:flex;justify-content:space-between;gap:12px;margin-top:40px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:600;text-decoration:none;transition:opacity .18s;}
+.btn:hover{opacity:.85;}
+.btn-d{background:var(--d);color:#fff;}
+.btn-g{background:white;color:var(--d);border:1.5px solid var(--l);}
+.footer{background:var(--d);padding:36px 20px;text-align:center;}
+.fb{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;color:var(--g);margin-bottom:6px;}
+.fs{font-size:12px;color:rgba(255,255,255,.3);line-height:1.7;}
+.fs a{color:var(--g);text-decoration:none;}
+@media(max-width:900px){.months{grid-template-columns:1fr;}}
+@media(max-width:640px){.nls{display:none;}.nb{display:flex;}.hero{padding:48px 16px 44px;}.hs-sep{display:none;}.w{padding:0 16px;}.sec{padding:40px 0;}.cw{height:240px;}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="ni">
+    <a href="darsy_today.html" class="nl">Darsy <span>Стратегия 2026</span></a>
+    <div class="nls">
+      <a href="darsy_today.html">Сегодня</a>
+      <a href="competitors.html">Конкуренты</a>
+      <a href="audit.html">Аудит</a>
+      <a href="hypotheses.html">Гипотезы</a>
+      <a href="roadmap.html" class="on">Карта</a>
+    </div>
+    <button class="nb" onclick="document.getElementById('nm').classList.toggle('open')"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="nm" id="nm">
+  <a href="darsy_today.html">Darsy сегодня</a>
+  <a href="competitors.html">Конкуренты</a>
+  <a href="audit.html">Аудит сайта</a>
+  <a href="hypotheses.html">10 гипотез</a>
+  <a href="roadmap.html" class="on">Дорожная карта</a>
+</div>
+
+<header class="hero">
+  <p class="he">Стратегический анализ · Апрель 2026 · Страница 5 / 5</p>
+  <h1>Дорожная карта<br><em>90 дней + P&L + KPI</em></h1>
+  <p>Конкретный план по трём месяцам: что делаем, зачем, сколько стоит, что замеряем. Без размытых формулировок.</p>
+  <div class="hrow">
+    <div class="hs"><div class="hs-v">90</div><div class="hs-l">дней первый цикл</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">230 т.р.</div><div class="hs-l">инвестиция мес.1</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">+3–4</div><div class="hs-l">доп. сделки/мес к мес.3</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">+5.8 млн</div><div class="hs-l">потенциал год 1</div></div>
+  </div>
+</header>
+
+<div class="w">
+
+<!-- 3 MONTHS -->
+<section class="sec" id="months">
+  <p class="ey">01 — Три месяца</p>
+  <h2 class="sh">Что делаем по неделям и зачем</h2>
+  <div class="dv"></div>
+  <p class="sd">Принцип: сначала «бесплатные деньги» (то что стоит ноль и даёт немедленный результат), потом быстрые активации, потом стратегические инвестиции.</p>
+
+  <div class="months">
+
+    <!-- MONTH 1 -->
+    <div class="month">
+      <div class="month-head">
+        <span class="month-tag" style="background:rgba(26,122,58,.15);color:var(--ok);">Месяц 1 · Май</span>
+        <div class="month-title">Фундамент</div>
+        <div class="month-focus">Бесплатные деньги + базовая аналитика</div>
+      </div>
+      <div class="month-tasks">
+        <div class="mt">
+          <div class="mt-num" style="color:var(--no);">1</div>
+          <div class="mt-body">
+            <div class="mt-title">Переписать /ceny/ — фикс. гонорар</div>
+            <div class="mt-desc">Убрать «от 20 000». Три пакета: Координатор 50 т.р. / Организация 120 т.р. / Под ключ 200 т.р. + состав каждого.</div>
+            <span class="mt-chip" style="background:#E8F5E9;color:var(--ok);">Нед. 1 · 0 ₽ · +1.5 сделок/мес</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--no);">2</div>
+          <div class="mt-body">
+            <div class="mt-title">Убрать CAPTCHA + Telegram-кнопка</div>
+            <div class="mt-desc">SmartCaptcha на backend. Floating TG-кнопка на мобайле. «5.0 / 220 отзывов» в hero-блок главной.</div>
+            <span class="mt-chip" style="background:#E8F5E9;color:var(--ok);">Нед. 1–2 · 20 т.р. · CR +35%</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--wr);">3</div>
+          <div class="mt-body">
+            <div class="mt-title">Подключить Яндекс.Метрику к отчётам</div>
+            <div class="mt-desc">Настроить цели: форма, калькулятор, TG-кнопка, кнопки в портфолио. Получить реальные CR по каждому источнику.</div>
+            <span class="mt-chip" style="background:#FFF8E1;color:var(--wr);">Нед. 1 · 0 ₽ · база для решений</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--wr);">4</div>
+          <div class="mt-body">
+            <div class="mt-title">Запустить VK ретаргетинг</div>
+            <div class="mt-desc">Пиксель уже стоит. Создать 2–3 объявления: «Вы смотрели свадебные агентства?» + кейс + CTA. Бюджет 2 000 р/день.</div>
+            <span class="mt-chip" style="background:#FFF8E1;color:var(--wr);">Нед. 2 · 60 т.р./мес · 3 дня настройки</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--wr);">5</div>
+          <div class="mt-body">
+            <div class="mt-title">Pinterest: создать 5 тематических досок</div>
+            <div class="mt-desc">«Свадьбы в лофтах», «Свадьбы в шатрах», «Свадьбы до 1 млн», «Декор и флористика», «Выездные регистрации». 20+ пинов в каждую с SEO-описаниями из прошлых проектов.</div>
+            <span class="mt-chip" style="background:#FFF8E1;color:var(--wr);">Нед. 2–4 · 50 т.р. · долгосрочный актив</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--g);">6</div>
+          <div class="mt-body">
+            <div class="mt-title">Починить 3 некликабельных услуги</div>
+            <div class="mt-desc">Музыкальные группы, Шоу-программа, Фото и видео — создать страницы с минимальным контентом и прайсом.</div>
+            <span class="mt-chip" style="background:rgba(200,150,74,.15);color:var(--g);">Нед. 3 · 0 ₽ · устранение потери доверия</span>
+          </div>
+        </div>
+      </div>
+      <div class="month-kpi">
+        <div class="month-kpi-title">KPI конец месяца 1</div>
+        <div class="kpi-row"><span class="kpi-k">Лидов/мес</span><span class="kpi-v">≥150 (было 125)</span></div>
+        <div class="kpi-row"><span class="kpi-k">CR форм на мобайле</span><span class="kpi-v">≥2.8% (было ~1.5%)</span></div>
+        <div class="kpi-row"><span class="kpi-k">Сделок/мес</span><span class="kpi-v">≥8 (было 6.6)</span></div>
+        <div class="kpi-row"><span class="kpi-k">Pinterest досок</span><span class="kpi-v">≥5 активных</span></div>
+        <div class="kpi-row"><span class="kpi-k">Бюджет месяца</span><span class="kpi-v" style="color:var(--no);">~130 т.р.</span></div>
+      </div>
+    </div>
+
+    <!-- MONTH 2 -->
+    <div class="month">
+      <div class="month-head">
+        <span class="month-tag" style="background:rgba(230,81,0,.15);color:var(--wr);">Месяц 2 · Июнь</span>
+        <div class="month-title">Конверсия</div>
+        <div class="month-focus">Мгновенный калькулятор + контент</div>
+      </div>
+      <div class="month-tasks">
+        <div class="mt">
+          <div class="mt-num" style="color:var(--no);">1</div>
+          <div class="mt-body">
+            <div class="mt-title">Мгновенный свадебный калькулятор</div>
+            <div class="mt-desc">Заменить форму «позвонят» на реальный калькулятор: гости × площадка × стиль → ориентир за 30 сек. Разработка на Tilda или отдельно. Разместить на главной и /ceny/.</div>
+            <span class="mt-chip" style="background:#FFEBEE;color:var(--no);">Нед. 5–8 · 80–100 т.р. · +40% CR лида</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--wr);">2</div>
+          <div class="mt-body">
+            <div class="mt-title">Реферальная программа</div>
+            <div class="mt-desc">Письмо 900 клиентам: «Приведи пару — получи [подарок]». Настроить UTM-метки для отслеживания. Партнёрский бонус: фотосессия love story или скидка у подрядчика.</div>
+            <span class="mt-chip" style="background:#FFF8E1;color:var(--wr);">Нед. 5 · 20 т.р. запуск · +1.1 сделок/мес</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--wr);">3</div>
+          <div class="mt-body">
+            <div class="mt-title">Добавить бюджеты в портфолио</div>
+            <div class="mt-desc">К каждому кейсу: «50 гостей · Лофт · 1.8 млн ₽ · Май 2025». CTA в конце каждого кейса: «Хочу похожую → Получить смету».</div>
+            <span class="mt-chip" style="background:#FFF8E1;color:var(--wr);">Нед. 5–6 · 0 ₽ · +9% CR портфолио</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--wr);">4</div>
+          <div class="mt-body">
+            <div class="mt-title">YouTube: первые 4 видео экспертного формата</div>
+            <div class="mt-desc">«Как мы организуем свадьбу за 1 млн» · «5 ошибок при выборе агентства» · «Тур по лофту [название]» · «Реальная смета свадьбы 850 т.р.».</div>
+            <span class="mt-chip" style="background:#FFF8E1;color:var(--wr);">Нед. 5–8 · 50 т.р. · доверие + SEO</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--g);">5</div>
+          <div class="mt-body">
+            <div class="mt-title">Pinterest: закрыть 900 проектов</div>
+            <div class="mt-desc">По 8–10 пинов с каждого архивного проекта. Приоритет: последние 3 года. SEO-описания с ключевыми запросами из Яндекс.Вордстат.</div>
+            <span class="mt-chip" style="background:rgba(200,150,74,.15);color:var(--g);">Нед. 5–8 · 50 т.р. (SMM) · 1000+ новых пинов</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--g);">6</div>
+          <div class="mt-body">
+            <div class="mt-title">Wedding Club: позиционирование + контент</div>
+            <div class="mt-desc">10 кейсов с бюджетами 3–8 млн. Описание сервиса «≤20 свадеб в год». Отдельный Pinterest. Связь с darsy-wed.ru через апсейл.</div>
+            <span class="mt-chip" style="background:rgba(200,150,74,.15);color:var(--g);">Нед. 6–8 · 80 т.р. · premium tier</span>
+          </div>
+        </div>
+      </div>
+      <div class="month-kpi">
+        <div class="month-kpi-title">KPI конец месяца 2</div>
+        <div class="kpi-row"><span class="kpi-k">Лидов/мес</span><span class="kpi-v">≥175</span></div>
+        <div class="kpi-row"><span class="kpi-k">Из калькулятора</span><span class="kpi-v">≥40/мес</span></div>
+        <div class="kpi-row"><span class="kpi-k">Сделок/мес</span><span class="kpi-v">≥9</span></div>
+        <div class="kpi-row"><span class="kpi-k">Pinterest пинов</span><span class="kpi-v">≥1 500</span></div>
+        <div class="kpi-row"><span class="kpi-k">Бюджет месяца</span><span class="kpi-v" style="color:var(--no);">~300 т.р.</span></div>
+      </div>
+    </div>
+
+    <!-- MONTH 3 -->
+    <div class="month">
+      <div class="month-head">
+        <span class="month-tag" style="background:rgba(61,26,107,.12);color:var(--p);">Месяц 3 · Июль</span>
+        <div class="month-title">Масштаб</div>
+        <div class="month-focus">Системы + органика + аналитика</div>
+      </div>
+      <div class="month-tasks">
+        <div class="mt">
+          <div class="mt-num" style="color:var(--wr);">1</div>
+          <div class="mt-body">
+            <div class="mt-title">SEO Подмосковье: 20 новых страниц</div>
+            <div class="mt-desc">Свадьба в [конкретная площадка/район Подмосковья] — 20 страниц с реальными кейсами, ценами, фото. Конкурентность ниже московских запросов.</div>
+            <span class="mt-chip" style="background:#FFF8E1;color:var(--wr);">Нед. 9–12 · 60 т.р. · +трафик через 4–6 мес</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--wr);">2</div>
+          <div class="mt-body">
+            <div class="mt-title">A/B тест калькулятора vs формы</div>
+            <div class="mt-desc">Разделить трафик: 50% видят калькулятор, 50% — форму. Замерить CR, качество лидов, конверсию в консультацию. Решение на основе данных.</div>
+            <span class="mt-chip" style="background:#FFF8E1;color:var(--wr);">Нед. 9 · 0 ₽ доп. · 4 недели теста</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--wr);">3</div>
+          <div class="mt-body">
+            <div class="mt-title">Личный Telegram-канал Романа</div>
+            <div class="mt-desc">«За кулисами свадебного агентства» — реальные кейсы, решения, ошибки. Частота 3–4 поста в неделю. Личный голос основателя = доверие до первого контакта.</div>
+            <span class="mt-chip" style="background:#FFF8E1;color:var(--wr);">Нед. 9 · 0 ₽ · личный бренд</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--g);">4</div>
+          <div class="mt-body">
+            <div class="mt-title">Дашборд собственника</div>
+            <div class="mt-desc">Еженедельный отчёт: трафик → лиды → консультации → сделки → выручка. Каналы сбора: Яндекс.Метрика + CRM. Время просмотра: 5 минут.</div>
+            <span class="mt-chip" style="background:rgba(200,150,74,.15);color:var(--g);">Нед. 9–10 · 20 т.р. · управление по данным</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--g);">5</div>
+          <div class="mt-body">
+            <div class="mt-title">ProEVENT B2B лендинг + воронка</div>
+            <div class="mt-desc">Отдельный лендинг под B2B-корпоративы с кейсами и прайсом. TG-канал для HR-директоров. Заполняет октябрь–январь сезон.</div>
+            <span class="mt-chip" style="background:rgba(200,150,74,.15);color:var(--g);">Нед. 10–12 · 80 т.р. · B2B pipeline</span>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="mt-num" style="color:var(--g);">6</div>
+          <div class="mt-body">
+            <div class="mt-title">Ревью и корректировка стратегии</div>
+            <div class="mt-desc">Итоги 90 дней: что сработало, что нет. Приоритизация следующих 90 дней на основе данных Метрики. Решение о масштабировании VK или Pinterest.</div>
+            <span class="mt-chip" style="background:rgba(200,150,74,.15);color:var(--g);">Нед. 12 · 0 ₽ · стратегия следующего цикла</span>
+          </div>
+        </div>
+      </div>
+      <div class="month-kpi">
+        <div class="month-kpi-title">KPI конец месяца 3</div>
+        <div class="kpi-row"><span class="kpi-k">Лидов/мес</span><span class="kpi-v">≥200</span></div>
+        <div class="kpi-row"><span class="kpi-k">CR лидов</span><span class="kpi-v">≥3.5%</span></div>
+        <div class="kpi-row"><span class="kpi-k">Сделок/мес</span><span class="kpi-v">≥10</span></div>
+        <div class="kpi-row"><span class="kpi-k">Pinterest подписчиков</span><span class="kpi-v">≥1 500</span></div>
+        <div class="kpi-row"><span class="kpi-k">Бюджет месяца</span><span class="kpi-v" style="color:var(--no);">~260 т.р.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- P&L -->
+<section class="sec" id="pl">
+  <p class="ey">02 — Финансовая модель</p>
+  <h2 class="sh">P&L: выручка, расходы, маржа по месяцам</h2>
+  <div class="dv"></div>
+  <p class="sd">Средний чек свадьбы 1 000 000 ₽, гонорар 12% = 120 000 ₽, маржинальность 30% = 36 000 ₽/сделка чистыми.</p>
+
+  <div class="pl-wrap">
+    <table class="pl">
+      <thead>
+        <tr>
+          <th>Показатель</th>
+          <th>Сейчас (база)</th>
+          <th>Месяц 1 (Май)</th>
+          <th>Месяц 2 (Июнь)</th>
+          <th>Месяц 3 (Июль)</th>
+          <th>+12 мес. прогноз</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="section-row"><td colspan="6">Воронка</td></tr>
+        <tr>
+          <td>Визитов/мес</td>
+          <td>5 000</td>
+          <td>5 200</td>
+          <td>5 800</td>
+          <td>6 500</td>
+          <td>9 000+</td>
+        </tr>
+        <tr>
+          <td>Лидов/мес</td>
+          <td>125</td>
+          <td>150 (+20%)</td>
+          <td>175 (+40%)</td>
+          <td>200 (+60%)</td>
+          <td>320+</td>
+        </tr>
+        <tr>
+          <td>CR лидов</td>
+          <td>2.5%</td>
+          <td>2.9%</td>
+          <td>3.0%</td>
+          <td>3.5%</td>
+          <td>3.5%</td>
+        </tr>
+        <tr>
+          <td>Консультаций/мес</td>
+          <td>44</td>
+          <td>53</td>
+          <td>61</td>
+          <td>70</td>
+          <td>112</td>
+        </tr>
+        <tr>
+          <td>Сделок/мес</td>
+          <td>6.6</td>
+          <td>8.0 (+21%)</td>
+          <td>9.0 (+36%)</td>
+          <td>10.5 (+59%)</td>
+          <td>14–16</td>
+        </tr>
+        <tr class="section-row"><td colspan="6">Финансы (свадебное агентство)</td></tr>
+        <tr>
+          <td>Выручка (гонорары)/мес</td>
+          <td>792 т.р.</td>
+          <td>960 т.р.</td>
+          <td>1 080 т.р.</td>
+          <td>1 260 т.р.</td>
+          <td>1 800+ т.р.</td>
+        </tr>
+        <tr>
+          <td>Расходы на маркетинг</td>
+          <td>0–20 т.р.</td>
+          <td class="neg">130 т.р.</td>
+          <td class="neg">300 т.р.</td>
+          <td class="neg">260 т.р.</td>
+          <td>350 т.р./мес</td>
+        </tr>
+        <tr>
+          <td>Маржа (30%) с выручки</td>
+          <td>238 т.р.</td>
+          <td>288 т.р.</td>
+          <td>324 т.р.</td>
+          <td>378 т.р.</td>
+          <td>540+ т.р.</td>
+        </tr>
+        <tr class="total-row">
+          <td>Чистая маржа после маркетинга</td>
+          <td>238 т.р.</td>
+          <td>158 т.р.</td>
+          <td>24 т.р.</td>
+          <td>118 т.р.</td>
+          <td>190+ т.р./мес</td>
+        </tr>
+        <tr>
+          <td style="font-size:12px;color:var(--s);">Примечание</td>
+          <td style="font-size:11px;color:var(--s);">База</td>
+          <td style="font-size:11px;color:var(--s);">Инвестиция в рост</td>
+          <td style="font-size:11px;color:var(--s);">Активная фаза</td>
+          <td style="font-size:11px;color:var(--s);">Выход в рост</td>
+          <td style="font-size:11px;color:var(--ok);">Устойчивый рост</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chart-box">
+    <div class="ct">Прогноз роста: выручка и маржа по месяцам</div>
+    <div class="cs">Тыс. рублей. Месяцы 1–3 = инвестиции. С месяца 4 — устойчивый рост органики.</div>
+    <div class="cw"><canvas id="plChart"></canvas></div>
+  </div>
+</section>
+
+<!-- KPIs -->
+<section class="sec" id="kpis">
+  <p class="ey">03 — Ключевые метрики</p>
+  <h2 class="sh">KPI: что замеряем еженедельно</h2>
+  <div class="dv"></div>
+  <p class="sd">Дашборд собственника — 5 метрик, 5 минут в неделю. Всё остальное — детали.</p>
+
+  <div class="kpis">
+    <div class="kpi-card">
+      <div class="kpi-card-title">Лидов из сайта / мес</div>
+      <div class="kpi-card-metric">Источник: Яндекс.Метрика → Цели</div>
+      <div class="kpi-progress"><div class="kpi-bar" style="width:63%;background:var(--g);"></div></div>
+      <div style="display:flex;justify-content:space-between;"><div class="kpi-now">Сейчас: ~125</div><div class="kpi-target" style="color:var(--ok);">Цель 90 дн: 200</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-title">CR сайта (лид/визит)</div>
+      <div class="kpi-card-metric">Источник: Яндекс.Метрика</div>
+      <div class="kpi-progress"><div class="kpi-bar" style="width:71%;background:var(--g);"></div></div>
+      <div style="display:flex;justify-content:space-between;"><div class="kpi-now">Сейчас: ~2.5%</div><div class="kpi-target" style="color:var(--ok);">Цель: 3.5%</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-title">Сделок / мес</div>
+      <div class="kpi-card-metric">Источник: CRM / менеджер</div>
+      <div class="kpi-progress"><div class="kpi-bar" style="width:66%;background:var(--g);"></div></div>
+      <div style="display:flex;justify-content:space-between;"><div class="kpi-now">Сейчас: 6–7</div><div class="kpi-target" style="color:var(--ok);">Цель: 10+</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-title">Pinterest подписчиков</div>
+      <div class="kpi-card-metric">Источник: Pinterest Analytics</div>
+      <div class="kpi-progress"><div class="kpi-bar" style="width:16%;background:var(--no);"></div></div>
+      <div style="display:flex;justify-content:space-between;"><div class="kpi-now">Сейчас: 235</div><div class="kpi-target" style="color:var(--ok);">Цель: 1 500+</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-title">Доп. выручка / мес</div>
+      <div class="kpi-card-metric">Относительно базы 792 т.р./мес</div>
+      <div class="kpi-progress"><div class="kpi-bar" style="width:0%;background:var(--no);"></div></div>
+      <div style="display:flex;justify-content:space-between;"><div class="kpi-now">Сейчас: 0</div><div class="kpi-target" style="color:var(--ok);">Цель 90 дн: +468 т.р./мес</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-title">VK ретаргетинг: лидов</div>
+      <div class="kpi-card-metric">Источник: VK Ads кабинет</div>
+      <div class="kpi-progress"><div class="kpi-bar" style="width:0%;background:var(--no);"></div></div>
+      <div style="display:flex;justify-content:space-between;"><div class="kpi-now">Сейчас: 0 (не запущен)</div><div class="kpi-target" style="color:var(--ok);">Цель: 20/мес</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL STATEMENT -->
+<section class="sec" id="final">
+  <div class="final">
+    <div class="final-title">Итоговый потенциал при реализации стратегии</div>
+    <div class="final-sub">Три первых гипотезы (фиксированный гонорар, Pinterest, VK ретаргетинг) стоят 130 т.р. в месяц 1 и требуют 2–3 недели на запуск. При реализации к концу 90 дней — уже устойчивый рост.</div>
+    <div class="hrow" style="margin-bottom:0;">
+      <div class="hs"><div class="final-num">+59%</div><div class="final-num-l">рост сделок к мес. 3</div></div>
+      <div class="hs-sep"></div>
+      <div class="hs"><div class="final-num">+5.8 млн</div><div class="final-num-l">доп. выручка год 1</div></div>
+      <div class="hs-sep"></div>
+      <div class="hs"><div class="final-num">690 т.р.</div><div class="final-num-l">инвестиция за 90 дней</div></div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <a href="hypotheses.html" class="btn btn-g">← 10 гипотез</a>
+    <a href="darsy_today.html" class="btn btn-d">↑ В начало</a>
+  </div>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="fb">Darsy · Стратегический анализ 2026</div>
+  <div class="fs">Страница 5 из 5 &nbsp;·&nbsp;
+    <a href="darsy_today.html">← Сегодня</a>&ensp;
+    <a href="competitors.html">← Конкуренты</a>&ensp;
+    <a href="audit.html">← Аудит</a>&ensp;
+    <a href="hypotheses.html">← Гипотезы</a>
+  </div>
+</footer>
+
+<script>
+var months=['База','Май (М1)','Июнь (М2)','Июль (М3)','Авг','Сент','Окт','Нояб','Дек','Янв','Фев','Март'];
+var revenue=[792,960,1080,1260,1350,1440,1500,1560,1620,1680,1740,1800];
+var marketing=[15,130,300,260,200,200,200,200,200,200,200,200];
+var margin=revenue.map(function(r,i){return Math.round(r*0.3-marketing[i]);});
+new Chart(document.getElementById('plChart'),{
+  type:'line',
+  data:{labels:months,datasets:[
+    {label:'Выручка (гонорары) т.р.',data:revenue,borderColor:'#C8964A',backgroundColor:'rgba(200,150,74,.08)',fill:true,tension:.4,pointBackgroundColor:'#C8964A',borderWidth:2},
+    {label:'Маркетинг-бюджет т.р.',data:marketing,borderColor:'rgba(170,40,40,.7)',backgroundColor:'transparent',tension:.4,pointBackgroundColor:'#AA2828',borderWidth:2,borderDash:[4,2]},
+    {label:'Чистая маржа после маркетинга т.р.',data:margin,borderColor:'#1A7A3A',backgroundColor:'rgba(26,122,58,.07)',fill:true,tension:.4,pointBackgroundColor:'#1A7A3A',borderWidth:2}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{color:'#8A8A9A',font:{size:11},usePointStyle:true}},
+      tooltip:{backgroundColor:'rgba(26,10,46,.92)',titleFont:{size:11},bodyFont:{size:11},padding:10,cornerRadius:8,callbacks:{label:function(c){return c.dataset.label+': '+c.raw.toLocaleString()+' т.р.';}}}},
+    scales:{y:{grid:{color:'#F0EBF8'},ticks:{color:'#8A8A9A',callback:function(v){return v+' т.р.';}}},x:{grid:{display:false},ticks:{color:'#8A8A9A',font:{size:10}}}}}
+});
+</script>
+</body>
+</html>

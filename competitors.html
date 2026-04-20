@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Конкурентный анализ — Darsy 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+@import url('https://fonts.bunny.net/css?family=cormorant-garamond:400,600,700,700i|dm-sans:400,500,600');
+:root{--c:#FAF7F2;--d:#1A0A2E;--g:#C8964A;--p:#3D1A6B;--s:#8A8A9A;--l:#EAE4F5;--ok:#1A7A3A;--no:#AA2828;--wr:#E65100;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--c);color:var(--d);font-family:'DM Sans','Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(250,247,242,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--l);display:flex;align-items:center;}
+.ni{width:100%;max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.nl{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;font-weight:700;color:var(--d);text-decoration:none;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.nl span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);font-weight:600;background:rgba(200,150,74,.13);padding:2px 8px;border-radius:10px;}
+.nls{display:flex;gap:3px;}
+.nls a{font-size:11px;font-weight:500;color:var(--s);text-decoration:none;padding:5px 10px;border-radius:20px;white-space:nowrap;transition:all .18s;}
+.nls a:hover{color:var(--d);background:var(--l);}
+.nls a.on{background:var(--d);color:#fff;}
+.nb{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:8px;border:none;background:none;width:40px;height:40px;flex-shrink:0;}
+.nb span{display:block;width:22px;height:2px;background:var(--d);border-radius:2px;}
+.nm{display:none;flex-direction:column;gap:2px;padding:12px 16px 16px;border-bottom:1px solid var(--l);background:rgba(250,247,242,.98);position:sticky;top:60px;z-index:199;}
+.nm a{font-size:14px;font-weight:500;color:var(--s);text-decoration:none;padding:10px 14px;border-radius:10px;}
+.nm a:hover,.nm a.on{color:var(--d);background:var(--l);}
+.nm.open{display:flex;}
+.hero{background:linear-gradient(140deg,#0A1428 0%,var(--d) 50%,#2A0A3E 100%);padding:68px 20px 56px;text-align:center;overflow:hidden;}
+.he{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g);margin-bottom:14px;}
+.hero h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(28px,6vw,52px);font-weight:700;color:#fff;line-height:1.08;margin-bottom:16px;word-break:break-word;padding:0 4px;}
+.hero h1 em{color:var(--g);font-style:italic;}
+.hero p{font-size:clamp(13px,3vw,15px);color:rgba(255,255,255,.6);max-width:560px;margin:0 auto 36px;line-height:1.75;}
+.hrow{display:flex;justify-content:center;gap:clamp(12px,3vw,28px);flex-wrap:wrap;}
+.hs{text-align:center;}.hs-v{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(24px,5vw,34px);font-weight:700;color:var(--g);line-height:1;}
+.hs-l{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-top:4px;}
+.hs-sep{width:1px;background:rgba(255,255,255,.12);align-self:stretch;}
+.w{max-width:1280px;margin:0 auto;padding:0 20px;}
+.sec{padding:60px 0;border-top:1px solid var(--l);}
+.sec:first-child{border-top:none;padding-top:52px;}
+.ey{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g);margin-bottom:8px;}
+.sh{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,4vw,38px);font-weight:700;color:var(--d);line-height:1.1;}
+.dv{width:48px;height:3px;background:linear-gradient(90deg,var(--g),transparent);margin:12px 0 18px;border-radius:2px;}
+.sd{color:var(--s);font-size:14px;line-height:1.75;max-width:680px;margin-bottom:28px;}
+
+/* BIG TABLE */
+.tbl-wrap{overflow-x:auto;margin-bottom:32px;border-radius:16px;border:1px solid var(--l);}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;min-width:860px;}
+.tbl th{background:var(--d);padding:10px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);white-space:nowrap;}
+.tbl th:first-child{color:var(--g);min-width:120px;}
+.tbl td{padding:11px 12px;border-bottom:1px solid #FAF7F2;vertical-align:top;line-height:1.55;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:#FAFAF8;}
+.tbl .darsy{background:#FFFBF0!important;font-weight:600;}
+.tbl .darsy td{background:#FFFBF0;}
+.param{font-size:11px;font-weight:700;color:var(--p);white-space:nowrap;}
+.good{color:var(--ok);font-weight:600;}
+.bad-t{color:var(--no);font-size:11px;}
+.note{color:var(--s);font-size:11px;}
+
+/* PROFILES */
+.profiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-bottom:32px;}
+.prof{background:white;border-radius:16px;border:1px solid var(--l);padding:22px;transition:box-shadow .2s;}
+.prof:hover{box-shadow:0 6px 24px rgba(61,26,107,.1);}
+.prof-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+.prof-icon{font-size:28px;background:#FAF7F2;padding:8px 10px;border-radius:10px;line-height:1.2;flex-shrink:0;}
+.prof-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;font-weight:700;color:var(--d);}
+.prof-seg{font-size:11px;color:var(--s);margin-top:2px;}
+.prof-price{font-size:12px;font-weight:700;color:var(--g);background:rgba(200,150,74,.12);padding:3px 9px;border-radius:10px;}
+.prof-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #FAF7F2;font-size:12px;}
+.prof-row:last-of-type{border-bottom:none;}
+.pr-k{color:var(--s);}
+.pr-v{font-weight:500;color:var(--d);text-align:right;max-width:160px;}
+
+/* CHARTS */
+.charts-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;}
+.chart-box{background:white;border-radius:16px;border:1px solid var(--l);padding:22px;}
+.ct{font-size:14px;font-weight:600;color:var(--d);margin-bottom:3px;}
+.cs{font-size:12px;color:var(--s);margin-bottom:16px;}
+.cw{position:relative;width:100%;height:280px;}
+
+/* INSIGHTS */
+.ins-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:32px;}
+.ins{background:white;border-radius:14px;border:1px solid var(--l);padding:20px;}
+.ins-n{font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:700;line-height:1;margin-bottom:6px;}
+.ins-t{font-weight:600;font-size:13px;color:var(--d);margin-bottom:5px;}
+.ins-b{font-size:13px;color:var(--s);line-height:1.6;}
+
+/* WHAT THEY DO BETTER */
+.better{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.bcard{background:white;border-radius:14px;border:1px solid var(--l);padding:18px;border-left:4px solid transparent;}
+.bcard-name{font-weight:700;font-size:13px;color:var(--d);margin-bottom:8px;}
+.bcard-item{font-size:12px;color:var(--s);line-height:1.6;padding:3px 0;}
+
+/* POSITIONING MAP */
+.map-wrap{background:white;border-radius:18px;border:1px solid var(--l);padding:28px;margin-bottom:28px;}
+.map-grid{position:relative;width:100%;padding-top:52%;border:1.5px solid var(--l);border-radius:12px;background:#FAFAF8;}
+.map-inner{position:absolute;top:0;left:0;right:0;bottom:0;}
+.map-axis-x{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--s);}
+.map-axis-y{position:absolute;left:6px;top:50%;transform:translateY(-50%) rotate(-90deg);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--s);}
+.map-dot{position:absolute;transform:translate(-50%,-50%);cursor:pointer;}
+.dot{border-radius:50%;border:2.5px solid white;box-shadow:0 2px 10px rgba(0,0,0,.15);transition:transform .2s;}
+.map-dot:hover .dot{transform:scale(1.3);}
+.dot-label{font-size:10px;font-weight:700;text-align:center;white-space:nowrap;margin-top:3px;}
+
+.nav-btns{display:flex;justify-content:space-between;gap:12px;margin-top:40px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:600;text-decoration:none;transition:opacity .18s;}
+.btn:hover{opacity:.85;}
+.btn-d{background:var(--d);color:#fff;}
+.btn-g{background:white;color:var(--d);border:1.5px solid var(--l);}
+.footer{background:var(--d);padding:36px 20px;text-align:center;}
+.fb{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;color:var(--g);margin-bottom:6px;}
+.fs{font-size:12px;color:rgba(255,255,255,.3);line-height:1.7;}
+.fs a{color:var(--g);text-decoration:none;}
+@media(max-width:800px){.charts-2{grid-template-columns:1fr;}.ins-grid{grid-template-columns:1fr;}.better{grid-template-columns:1fr;}.profiles{grid-template-columns:1fr;}}
+@media(max-width:640px){.nls{display:none;}.nb{display:flex;}.hero{padding:48px 16px 44px;}.hs-sep{display:none;}.w{padding:0 16px;}.sec{padding:40px 0;}.cw{height:220px;}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="ni">
+    <a href="darsy_today.html" class="nl">Darsy <span>Стратегия 2026</span></a>
+    <div class="nls">
+      <a href="darsy_today.html">Сегодня</a>
+      <a href="competitors.html" class="on">Конкуренты</a>
+      <a href="audit.html">Аудит</a>
+      <a href="hypotheses.html">Гипотезы</a>
+      <a href="roadmap.html">Карта</a>
+    </div>
+    <button class="nb" onclick="document.getElementById('nm').classList.toggle('open')"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="nm" id="nm">
+  <a href="darsy_today.html">Darsy сегодня</a>
+  <a href="competitors.html" class="on">Конкуренты</a>
+  <a href="audit.html">Аудит сайта</a>
+  <a href="hypotheses.html">10 гипотез</a>
+  <a href="roadmap.html">Дорожная карта</a>
+</div>
+
+<header class="hero">
+  <p class="he">Стратегический анализ · Апрель 2026 · Страница 2 / 5</p>
+  <h1>Конкурентная разведка<br><em>10 параметров × 7 игроков</em></h1>
+  <p>Реальные данные по конкурентам: позиционирование, цены, каналы, что они делают лучше нас и что мы можем скопировать.</p>
+  <div class="hrow">
+    <div class="hs"><div class="hs-v">6</div><div class="hs-l">конкурентов изучено</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">10</div><div class="hs-l">параметров сравнения</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">4</div><div class="hs-l">лучшие практики</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">3</div><div class="hs-l">тира рынка</div></div>
+  </div>
+</header>
+
+<div class="w">
+
+<!-- COMPARISON TABLE -->
+<section class="sec" id="table">
+  <p class="ey">01 — Полная таблица сравнения</p>
+  <h2 class="sh">10 параметров по всем игрокам рынка</h2>
+  <div class="dv"></div>
+  <p class="sd">★ — столбец Darsy. Жёлтый фон = наша позиция. Зелёный текст = лучшая практика на рынке.</p>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Параметр</th>
+          <th style="background:#2A1545;color:var(--g);">★ DARSY</th>
+          <th>Apriori Married</th>
+          <th>Vozdukh Wedding</th>
+          <th>Kate & Leo</th>
+          <th>vesna.wedding</th>
+          <th>Marmalade</th>
+          <th>Mironova</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="param">Сегмент</td>
+          <td class="darsy">Middle+ / Premium<br><span class="note">+ WC: High-End</span></td>
+          <td>Middle+</td>
+          <td>Upper Middle</td>
+          <td>Middle</td>
+          <td>Middle / Premium</td>
+          <td>Middle</td>
+          <td>High-End</td>
+        </tr>
+        <tr>
+          <td class="param">Мин. бюджет свадьбы</td>
+          <td class="darsy">~850 т.р.<br><span class="note">Публично не указано</span></td>
+          <td class="good">1 500 000 ₽ — чётко</td>
+          <td>~2 000 000 ₽</td>
+          <td>~1 000 000 ₽</td>
+          <td>~1 200 000 ₽</td>
+          <td>~700 000 ₽</td>
+          <td>3 500 000 ₽</td>
+        </tr>
+        <tr>
+          <td class="param">Гонорар агентства</td>
+          <td class="darsy"><span style="color:var(--no);">«от 20 000 руб»</span><br><span class="note">Вводит в заблуждение!</span></td>
+          <td class="good"><b>Фикс 150 000 ₽</b><br><span style="color:var(--ok);">Прозрачно, публично</span></td>
+          <td>Не публичный</td>
+          <td>Не публичный</td>
+          <td>Не публичный</td>
+          <td>Не публичный</td>
+          <td>10% от сметы</td>
+        </tr>
+        <tr>
+          <td class="param">Пакетное предложение</td>
+          <td class="darsy"><span style="color:var(--no);">❌ Нет</span></td>
+          <td class="good"><b>✅ Пакет 30 гостей<br>от 1 350 000 ₽</b></td>
+          <td>Нет</td>
+          <td>Нет</td>
+          <td>Нет</td>
+          <td>Нет</td>
+          <td>Нет</td>
+        </tr>
+        <tr>
+          <td class="param">Позиционирование / УТП</td>
+          <td class="darsy">«Свадьба как в кино»<br><span class="note">Нет якорной фишки</span></td>
+          <td>«Фикс. гонорар, без скрытых расходов»</td>
+          <td>«Без шаблонов»</td>
+          <td>«Душевные свадьбы»</td>
+          <td>«Свадьбы про людей»</td>
+          <td>«Стильно и надёжно»</td>
+          <td>«Свадьба как искусство»</td>
+        </tr>
+        <tr>
+          <td class="param">Сайт / конверсия</td>
+          <td class="darsy">Tilda, 200+ страниц<br><span style="color:var(--wr);">⚠️ Калькулятор-форма</span><br><span class="note">3 некликабельных услуги</span></td>
+          <td class="good">Квиз на 8 вопросов → оффер<br><span style="color:var(--ok);">Сильный лид-магнит</span></td>
+          <td>Современный</td>
+          <td class="good">✅ Интерактив. калькулятор</td>
+          <td>Хороший, свежий</td>
+          <td>Есть калькулятор<br><span class="note">(устаревший)</span></td>
+          <td>Премиальный<br><span style="color:var(--ok);">Личный кабинет</span></td>
+        </tr>
+        <tr>
+          <td class="param">Отзывы / репутация</td>
+          <td class="darsy" style="font-weight:700;background:#FFFBF0;">
+            <span style="color:var(--ok);">★ 5.0 / 220 Яндекс<br>4.9 Google</span><br>
+            <span class="note">Лучший показатель</span>
+          </td>
+          <td>Отличные, 500+ событий</td>
+          <td>Хорошие</td>
+          <td>Тёплые, 4.8+</td>
+          <td>Отличные (нов. агентство)</td>
+          <td>Хорошие</td>
+          <td>Статусные</td>
+        </tr>
+        <tr>
+          <td class="param">Соцсети (основной RU)</td>
+          <td class="darsy">VK ~2–5 т.<br><span style="color:var(--no);">Instagram заблокирован</span></td>
+          <td>IG + Weddywood активно</td>
+          <td>IG ~35–50 т.</td>
+          <td>IG ~20–30 т.</td>
+          <td>IG + Weddywood<br><span style="color:var(--ok);">активный TG</span></td>
+          <td>VK активно</td>
+          <td><span class="good">IG 100–130 т.</span></td>
+        </tr>
+        <tr>
+          <td class="param">Pinterest / SEO-органика</td>
+          <td class="darsy"><span style="color:var(--no);">235 подписчиков (!)<br>Начато 4 мес. назад</span></td>
+          <td>Слабый Pinterest</td>
+          <td>Средний</td>
+          <td>Средний</td>
+          <td>Активный контент</td>
+          <td>Слабый</td>
+          <td class="good"><b>🔥 Сильный Pinterest<br>30–40% органики</b></td>
+        </tr>
+        <tr>
+          <td class="param">Уникальный актив / барьер</td>
+          <td class="darsy"><span style="color:var(--g);">✅ Холдинг 4 брендов<br>✅ Своё оборудование<br>✅ Роман лично</span><br><span style="color:var(--no);">Нигде не коммуниц.</span></td>
+          <td>Своё оборудование<br>Фиксированный прайс</td>
+          <td>Зарубежные свадьбы</td>
+          <td>YouTube + калькулятор</td>
+          <td>Концепция «про людей»</td>
+          <td>Доступность 24/7</td>
+          <td class="good">Личный кабинет<br>Финансовые гарантии</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- COMPETITOR PROFILES -->
+<section class="sec" id="profiles">
+  <p class="ey">02 — Профили конкурентов</p>
+  <h2 class="sh">Детальный разбор каждого игрока</h2>
+  <div class="dv"></div>
+
+  <div class="profiles">
+    <div class="prof">
+      <div class="prof-head">
+        <div><div class="prof-name">🏛️ Apriori Married</div><div class="prof-seg">apriorimarried.ru · С 2014 года</div></div>
+        <span class="prof-price">Фикс 150 000 ₽</span>
+      </div>
+      <div class="prof-row"><span class="pr-k">Осн. Илона Расулова</span><span class="pr-v">С 2014, 500–600 событий</span></div>
+      <div class="prof-row"><span class="pr-k">Гонорар</span><span class="pr-v" style="color:var(--ok);font-weight:700;">150 000 ₽ фиксированно</span></div>
+      <div class="prof-row"><span class="pr-k">Рек. бюджет</span><span class="pr-v">от 1 500 000 ₽</span></div>
+      <div class="prof-row"><span class="pr-k">Пакет "30 гостей"</span><span class="pr-v">от 1 350 000 ₽ (всё включено)</span></div>
+      <div class="prof-row"><span class="pr-k">Своё оборудование</span><span class="pr-v">✅ Звук, свет, экраны</span></div>
+      <div class="prof-row"><span class="pr-k">Лид-магнит</span><span class="pr-v">Квиз 8 вопросов → оффер</span></div>
+      <div style="margin-top:10px;font-size:12px;color:var(--no);font-weight:600;">⚠️ Главная угроза: более прозрачное ценообразование чем у Darsy</div>
+    </div>
+
+    <div class="prof">
+      <div class="prof-head">
+        <div><div class="prof-name">☁️ Vozdukh Wedding</div><div class="prof-seg">vozdukh-wedding.ru</div></div>
+        <span class="prof-price">от 2 млн ₽</span>
+      </div>
+      <div class="prof-row"><span class="pr-k">Позиционирование</span><span class="pr-v">«Без шаблонов, европейская эстетика»</span></div>
+      <div class="prof-row"><span class="pr-k">Аудитория</span><span class="pr-v">IT-специалисты, 25–35 лет</span></div>
+      <div class="prof-row"><span class="pr-k">Instagram</span><span class="pr-v">~35–50 тысяч подписчиков</span></div>
+      <div class="prof-row"><span class="pr-k">Каналы</span><span class="pr-v">IG Reels, таргет, SEO</span></div>
+      <div class="prof-row"><span class="pr-k">Зарубежные свадьбы</span><span class="pr-v">✅ Активно продвигает</span></div>
+      <div class="prof-row"><span class="pr-k">Слабость</span><span class="pr-v">Нет прозрачных цен</span></div>
+    </div>
+
+    <div class="prof">
+      <div class="prof-head">
+        <div><div class="prof-name">🌿 Kate & Leo Wedding</div><div class="prof-seg">kateleowedding.com</div></div>
+        <span class="prof-price">от 1 млн ₽</span>
+      </div>
+      <div class="prof-row"><span class="pr-k">Позиционирование</span><span class="pr-v">«Душевные, про людей»</span></div>
+      <div class="prof-row"><span class="pr-k">Калькулятор</span><span class="pr-v" style="color:var(--ok);font-weight:600;">✅ Интерактивный мгновенный</span></div>
+      <div class="prof-row"><span class="pr-k">YouTube</span><span class="pr-v">✅ Активный, экспертный</span></div>
+      <div class="prof-row"><span class="pr-k">Билингвальные свадьбы</span><span class="pr-v">✅ Русские + иностранцы</span></div>
+      <div class="prof-row"><span class="pr-k">Отзывы</span><span class="pr-v">4.8+, тёплые, личные</span></div>
+      <div style="margin-top:10px;font-size:12px;color:var(--ok);font-weight:600;">✅ Лучшая практика: интерактивный калькулятор как лид-магнит</div>
+    </div>
+
+    <div class="prof">
+      <div class="prof-head">
+        <div><div class="prof-name">🌸 vesna.wedding</div><div class="prof-seg">vesna.wedding · С 2021 года</div></div>
+        <span class="prof-price">от 1.2 млн ₽</span>
+      </div>
+      <div class="prof-row"><span class="pr-k">Основана</span><span class="pr-v">2021 (молодое, активное)</span></div>
+      <div class="prof-row"><span class="pr-k">Слоган</span><span class="pr-v">«Делаем свадьбы про людей»</span></div>
+      <div class="prof-row"><span class="pr-k">Контент-активность</span><span class="pr-v">Высокая (много Reels)</span></div>
+      <div class="prof-row"><span class="pr-k">Weddywood</span><span class="pr-v">✅ Активное присутствие</span></div>
+      <div class="prof-row"><span class="pr-k">Pinterest</span><span class="pr-v">~10 досок по 10 пинов</span></div>
+      <div style="margin-top:10px;font-size:12px;color:var(--wr);font-weight:600;">⚠️ Растущий конкурент с хорошим digital</div>
+    </div>
+
+    <div class="prof">
+      <div class="prof-head">
+        <div><div class="prof-name">🍬 Marmalade Wedding</div><div class="prof-seg">marmelad-wedding.ru</div></div>
+        <span class="prof-price">от 700 т.р.</span>
+      </div>
+      <div class="prof-row"><span class="pr-k">Позиционирование</span><span class="pr-v">«Стильно и надёжно, 24/7»</span></div>
+      <div class="prof-row"><span class="pr-k">Калькулятор</span><span class="pr-v" style="color:var(--wr);">⚠️ Есть, но устарел (сами признают)</span></div>
+      <div class="prof-row"><span class="pr-k">ВКонтакте</span><span class="pr-v">Активно ведёт</span></div>
+      <div class="prof-row"><span class="pr-k">Яндекс.Директ</span><span class="pr-v">Активная реклама</span></div>
+      <div class="prof-row"><span class="pr-k">Агрегаторы</span><span class="pr-v">Gorko, Nevesta.info</span></div>
+      <div style="margin-top:10px;font-size:12px;color:var(--s);">Массовый сегмент ниже Darsy по чеку</div>
+    </div>
+
+    <div class="prof">
+      <div class="prof-head">
+        <div><div class="prof-name">🖤 Mironova Wedding</div><div class="prof-seg">mironovawedding.ru</div></div>
+        <span class="prof-price">от 3.5 млн ₽</span>
+      </div>
+      <div class="prof-row"><span class="pr-k">Позиционирование</span><span class="pr-v">«Свадьба как искусство»</span></div>
+      <div class="prof-row"><span class="pr-k">Instagram</span><span class="pr-v" style="color:var(--ok);">100–130 тысяч подписчиков</span></div>
+      <div class="prof-row"><span class="pr-k">Pinterest</span><span class="pr-v" style="color:var(--ok);">30–40% органики через пины</span></div>
+      <div class="prof-row"><span class="pr-k">Личный кабинет</span><span class="pr-v" style="color:var(--ok);">✅ Технологический барьер</span></div>
+      <div class="prof-row"><span class="pr-k">Фин. гарантии</span><span class="pr-v" style="color:var(--ok);">✅ Возврат денег</span></div>
+      <div style="margin-top:10px;font-size:12px;color:var(--ok);font-weight:600;">✅ Эталон digital-стратегии в свадебном рынке</div>
+    </div>
+  </div>
+</section>
+
+<!-- CHARTS -->
+<section class="sec" id="charts">
+  <p class="ey">03 — Визуализация данных</p>
+  <h2 class="sh">Количественное сравнение</h2>
+  <div class="dv"></div>
+
+  <div class="charts-2">
+    <div class="chart-box">
+      <div class="ct">Минимальный порог входа, млн ₽</div>
+      <div class="cs">Darsy (WC) = Wedding Club. Apriori публично заявляет рекомендуемый бюджет 1.5 млн.</div>
+      <div class="cw"><canvas id="budgetChart"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="ct">Digital-зрелость: оценка по 5 параметрам</div>
+      <div class="cs">SEO, соцсети, конверсионность сайта, контент-стратегия, аудитория. Шкала 1–10.</div>
+      <div class="cw"><canvas id="radarChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-box">
+    <div class="ct">Структура каналов привлечения клиентов, %</div>
+    <div class="cs">Оценочное распределение. Обратите внимание: у Darsy Instagram (фактически заблокированный) занимает большую долю чем должен.</div>
+    <div class="cw" style="height:340px;"><canvas id="trafficChart"></canvas></div>
+  </div>
+</section>
+
+<!-- POSITIONING MAP -->
+<section class="sec" id="map">
+  <p class="ey">04 — Карта позиционирования</p>
+  <h2 class="sh">Где кто стоит: чек vs digital-зрелость</h2>
+  <div class="dv"></div>
+  <p class="sd">Darsy занимает правильный сегмент — Middle+ с лучшей репутацией. Проблема: в этой нише нет дифференциации от Apriori. Wedding Club — ответ на право-верхний квадрант.</p>
+
+  <div class="map-wrap">
+    <div style="font-size:13px;color:var(--s);margin-bottom:16px;">Размер точки ≈ количество отзывов × рейтинг. ★ = Darsy.</div>
+    <div class="map-grid">
+      <div class="map-inner" id="posMap"></div>
+      <div style="position:absolute;top:8px;left:8px;font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--s);opacity:.4;">Высокий digital</div>
+      <div style="position:absolute;bottom:8px;left:8px;font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--s);opacity:.4;">Низкий digital</div>
+      <div class="map-axis-x">← Бюджет ············ Премиум →</div>
+      <div class="map-axis-y">Digital</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT THEY DO BETTER -->
+<section class="sec" id="better">
+  <p class="ey">05 — Честный анализ</p>
+  <h2 class="sh">Что конкуренты делают лучше нас — и что брать</h2>
+  <div class="dv"></div>
+  <p class="sd">Без самоуспокоения. То что работает у них — должно быть у нас.</p>
+
+  <div class="better">
+    <div class="bcard" style="border-left-color:var(--no);">
+      <div class="bcard-name">🏛️ У Apriori берём:</div>
+      <div class="bcard-item">✅ Фиксированный гонорар с публичной ценой</div>
+      <div class="bcard-item">✅ Квиз как лид-магнит (8 вопросов → оффер)</div>
+      <div class="bcard-item">✅ Пакетное предложение «под ключ» с фиксированной суммой</div>
+      <div class="bcard-item">✅ Своё оборудование как конкурентный аргумент — у нас тоже есть (SoundLight), но не используется</div>
+    </div>
+    <div class="bcard" style="border-left-color:var(--g);">
+      <div class="bcard-name">🌿 У Kate & Leo берём:</div>
+      <div class="bcard-item">✅ Интерактивный мгновенный калькулятор (не форма «позвоним»)</div>
+      <div class="bcard-item">✅ YouTube-экспертиза как доверие до первого контакта</div>
+      <div class="bcard-item">✅ Билингвальный сегмент — у нас тоже есть иностранные клиенты, надо развивать</div>
+    </div>
+    <div class="bcard" style="border-left-color:var(--p);">
+      <div class="bcard-name">🖤 У Mironova берём:</div>
+      <div class="bcard-item">✅ Pinterest как основной органический канал</div>
+      <div class="bcard-item">✅ Личный кабинет клиента (даже минимальный повышает NPS)</div>
+      <div class="bcard-item">✅ Финансовые гарантии как элемент позиционирования</div>
+      <div class="bcard-item">✅ Высокая планка минимального бюджета = отсечение нецелевых заявок</div>
+    </div>
+    <div class="bcard" style="border-left-color:var(--ok);">
+      <div class="bcard-name">🌸 У Vesna берём:</div>
+      <div class="bcard-item">✅ Активную позицию в Weddywood (агрегатор)</div>
+      <div class="bcard-item">✅ Слоган «про людей» — конкретная человеческая история в каждом кейсе</div>
+      <div class="bcard-item">✅ Системный постинг в Pinterest (10 досок, 10 пинов каждая)</div>
+    </div>
+  </div>
+
+  <!-- Key insights -->
+  <div style="margin-top:28px;">
+    <div class="ins-grid">
+      <div class="ins" style="border-left:4px solid var(--no);">
+        <div class="ins-n" style="color:var(--no);">01</div>
+        <div class="ins-t">Apriori — прямая угроза</div>
+        <div class="ins-b">150 000 ₽ фиксированно — против нашего «от 20 000». Клиент выбирает тех, у кого понятнее. Фиксированный гонорар Apriori убирает страх скрытых расходов. Наш ответ — в гипотезе H1.</div>
+      </div>
+      <div class="ins" style="border-left:4px solid var(--g);">
+        <div class="ins-n" style="color:var(--g);">02</div>
+        <div class="ins-t">Наш главный актив — репутация</div>
+        <div class="ins-b">5.0 / 220 отзывов — лучший показатель из 7 игроков. Ни у кого больше нет такой доказательной базы. Но она спрятана в глубине сайта, а не работает как главный аргумент в hero-блоке.</div>
+      </div>
+      <div class="ins" style="border-left:4px solid var(--ok);">
+        <div class="ins-n" style="color:var(--ok);">03</div>
+        <div class="ins-t">Pinterest — незакрытая точка роста</div>
+        <div class="ins-b">Mironova через Pinterest генерирует 30–40% органики. У нас 235 подписчиков при 900 проведённых свадьбах. Каждый проект = 5–10 пинов. Это 4 500–9 000 пинов, которых нет.</div>
+      </div>
+      <div class="ins" style="border-left:4px solid var(--p);">
+        <div class="ins-n" style="color:var(--p);">04</div>
+        <div class="ins-t">Холдинг — невидимое преимущество</div>
+        <div class="ins-b">Ни один конкурент не имеет своего оборудования, корпоративного направления и премиум-бренда одновременно. Это три дополнительных источника дохода и синергии затрат. Нигде не коммуницируется.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <a href="darsy_today.html" class="btn btn-g">← Darsy сегодня</a>
+    <a href="audit.html" class="btn btn-d">Далее: Аудит сайта →</a>
+  </div>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="fb">Darsy · Стратегический анализ 2026</div>
+  <div class="fs">Страница 2 из 5 &nbsp;·&nbsp;
+    <a href="darsy_today.html">← Сегодня</a>&ensp;
+    <a href="audit.html">→ Аудит</a>&ensp;
+    <a href="hypotheses.html">→ Гипотезы</a>&ensp;
+    <a href="roadmap.html">→ Карта</a>
+  </div>
+</footer>
+
+<script>
+var pal=['#C8964A','#5B9BD5','#7C6FC2','#70AD47','#ED7D31','#8A8A9A','#AA2828'];
+var tt={backgroundColor:'rgba(26,10,46,.92)',titleFont:{size:11},bodyFont:{size:11},padding:10,cornerRadius:8};
+var wL=function(s){if(s.length<=12)return s;var ws=s.split(' '),lines=[],cur='';ws.forEach(function(w){if((cur+w).length>12){if(cur)lines.push(cur.trim());cur=w+' ';}else cur+=w+' ';});if(cur)lines.push(cur.trim());return lines;};
+
+var labels=['★ Darsy','★ Darsy WC','Apriori','Vozdukh','Kate&Leo','Vesna','Marmalade','Mironova'];
+new Chart(document.getElementById('budgetChart'),{type:'bar',
+  data:{labels:labels,datasets:[{label:'Мин. бюджет свадьбы (млн ₽)',data:[0.85,3.0,1.5,2.0,1.0,1.2,0.7,3.5],backgroundColor:['#C8964A','#8B5E00','#5B9BD5','#7C6FC2','#70AD47','#ED7D31','#8A8A9A','#AA2828'],borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:tt},scales:{y:{beginAtZero:true,grid:{color:'#F0EBF8'},ticks:{color:'#8A8A9A',callback:function(v){return v+' млн';}}},x:{grid:{display:false},ticks:{color:'#8A8A9A',font:{size:10}}}}}});
+
+new Chart(document.getElementById('radarChart'),{type:'radar',
+  data:{labels:['SEO / Трафик','Соцсети (RU)','Сайт конверсия','Контент стратегия','Аудитория'],
+  datasets:[
+    {label:'★ Darsy',data:[7,4,5,4,5],backgroundColor:'rgba(200,150,74,.15)',borderColor:'#C8964A',borderWidth:2,pointBackgroundColor:'#C8964A'},
+    {label:'Apriori',data:[6,6,8,6,6],backgroundColor:'rgba(91,155,213,.1)',borderColor:'#5B9BD5',borderWidth:2,pointBackgroundColor:'#5B9BD5'},
+    {label:'Mironova',data:[8,9,8,9,9],backgroundColor:'rgba(170,40,40,.08)',borderColor:'#AA2828',borderWidth:2,pointBackgroundColor:'#AA2828'},
+    {label:'Vesna',data:[6,7,6,7,6],backgroundColor:'rgba(237,125,49,.08)',borderColor:'#ED7D31',borderWidth:1.5,pointBackgroundColor:'#ED7D31'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#8A8A9A',font:{size:10},padding:10}},tooltip:tt},scales:{r:{beginAtZero:true,max:10,grid:{color:'#EAE4F5'},ticks:{display:false},pointLabels:{color:'#8A8A9A',font:{size:10}}}}}});
+
+new Chart(document.getElementById('trafficChart'),{type:'bar',
+  data:{labels:['★ Darsy','Apriori','Vozdukh','Kate&Leo','Vesna','Marmalade','Mironova'],
+  datasets:[
+    {label:'SEO & Яндекс',data:[38,35,20,35,40,18,8],backgroundColor:'#C8964A'},
+    {label:'Instagram (заблок.)',data:[18,20,50,20,25,10,55],backgroundColor:'rgba(170,40,40,.6)'},
+    {label:'VK / TG',data:[9,5,5,5,12,32,5],backgroundColor:'#3D1A6B'},
+    {label:'Агрегаторы / Директ',data:[22,25,12,28,14,32,7],backgroundColor:'#8A8A9A'},
+    {label:'Pinterest',data:[2,2,3,3,3,1,20],backgroundColor:'#E65100'},
+    {label:'YouTube / Дзен',data:[3,3,5,5,3,2,2],backgroundColor:'#70AD47'},
+    {label:'Рефералы',data:[8,10,5,4,3,5,3],backgroundColor:'#1A0A2E'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{color:'#8A8A9A',usePointStyle:true,boxWidth:7,font:{size:10}}},tooltip:{...tt,callbacks:{label:function(c){return c.dataset.label+': '+c.raw+'%';}}}},scales:{x:{stacked:true,grid:{display:false},ticks:{color:'#8A8A9A',font:{size:10}}},y:{stacked:true,max:100,grid:{color:'#F0EBF8'},ticks:{color:'#8A8A9A',callback:function(v){return v+'%'}}}}}});
+
+// Positioning map
+(function(){
+  var m=document.getElementById('posMap');
+  var pts=[
+    {n:'★ Darsy',cx:34,cy:45,sz:30,color:'#C8964A'},
+    {n:'WC',cx:68,cy:35,sz:20,color:'#8B5E00'},
+    {n:'Apriori',cx:38,cy:32,sz:22,color:'#5B9BD5'},
+    {n:'Vozdukh',cx:44,cy:28,sz:16,color:'#7C6FC2'},
+    {n:'Kate&Leo',cx:26,cy:45,sz:14,color:'#70AD47'},
+    {n:'Vesna',cx:40,cy:38,sz:16,color:'#ED7D31'},
+    {n:'Marmalade',cx:18,cy:60,sz:12,color:'#8A8A9A'},
+    {n:'Mironova',cx:82,cy:16,sz:26,color:'#AA2828'},
+  ];
+  pts.forEach(function(p){
+    var d=document.createElement('div');
+    d.className='map-dot';
+    d.style.cssText='left:'+p.cx+'%;top:'+p.cy+'%;';
+    d.innerHTML='<div class="dot" style="width:'+p.sz+'px;height:'+p.sz+'px;background:'+p.color+';margin:0 auto;"></div>'+
+      '<div class="dot-label" style="color:'+p.color+';font-size:'+(p.n==='★ Darsy'?11:9)+'px;font-weight:'+(p.n==='★ Darsy'?700:500)+';">'+p.n+'</div>';
+    m.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>

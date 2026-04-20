@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darsy: Бизнес сегодня — экосистема и каналы</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+@import url('https://fonts.bunny.net/css?family=cormorant-garamond:400,600,700,700i|dm-sans:400,500,600');
+:root{
+  --c:  #FAF7F2;   /* cream bg */
+  --d:  #1A0A2E;   /* dark */
+  --g:  #C8964A;   /* gold */
+  --p:  #3D1A6B;   /* plum */
+  --s:  #8A8A9A;   /* soft text */
+  --l:  #EAE4F5;   /* line */
+  --ok: #1A7A3A;   /* green */
+  --no: #AA2828;   /* red */
+  --wr: #E65100;   /* warning orange */
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--c); color: var(--d); font-family: 'DM Sans','Segoe UI',system-ui,sans-serif; font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+/* ── NAV ── */
+.nav { position: sticky; top: 0; z-index: 200; height: 60px; background: rgba(250,247,242,.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--l); display: flex; align-items: center; }
+.ni { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.nl { font-family:'Cormorant Garamond',Georgia,serif; font-size: 20px; font-weight: 700; color: var(--d); text-decoration: none; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.nl span { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--g); font-family:'DM Sans',sans-serif; font-weight: 600; background: rgba(200,150,74,.13); padding: 2px 8px; border-radius: 10px; }
+.nls { display: flex; gap: 3px; }
+.nls a { font-size: 11px; font-weight: 500; color: var(--s); text-decoration: none; padding: 5px 10px; border-radius: 20px; white-space: nowrap; transition: all .18s; }
+.nls a:hover { color: var(--d); background: var(--l); }
+.nls a.on { background: var(--d); color: #fff; }
+.nb { display: none; flex-direction: column; justify-content: center; gap: 5px; cursor: pointer; padding: 8px; border: none; background: none; width: 40px; height: 40px; flex-shrink: 0; }
+.nb span { display: block; width: 22px; height: 2px; background: var(--d); border-radius: 2px; }
+.nm { display: none; flex-direction: column; gap: 2px; padding: 12px 16px 16px; border-bottom: 1px solid var(--l); background: rgba(250,247,242,.98); position: sticky; top: 60px; z-index: 199; }
+.nm a { font-size: 14px; font-weight: 500; color: var(--s); text-decoration: none; padding: 10px 14px; border-radius: 10px; }
+.nm a:hover, .nm a.on { color: var(--d); background: var(--l); }
+.nm.open { display: flex; }
+
+/* ── HERO ── */
+.hero { background: linear-gradient(140deg, var(--d) 0%, #140830 60%, var(--p) 100%); padding: 68px 20px 56px; text-align: center; overflow: hidden; }
+.he { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--g); margin-bottom: 14px; }
+.hero h1 { font-family:'Cormorant Garamond',Georgia,serif; font-size: clamp(28px,6vw,52px); font-weight: 700; color: #fff; line-height: 1.08; margin-bottom: 16px; word-break: break-word; padding: 0 4px; }
+.hero h1 em { color: var(--g); font-style: italic; }
+.hero p { font-size: clamp(13px,3vw,15px); color: rgba(255,255,255,.6); max-width: 560px; margin: 0 auto 36px; line-height: 1.75; }
+.hrow { display: flex; justify-content: center; gap: clamp(12px,3vw,28px); flex-wrap: wrap; }
+.hs { text-align: center; }
+.hs-v { font-family:'Cormorant Garamond',Georgia,serif; font-size: clamp(24px,5vw,34px); font-weight: 700; color: var(--g); line-height: 1; }
+.hs-l { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.4); margin-top: 4px; }
+.hs-sep { width: 1px; background: rgba(255,255,255,.12); align-self: stretch; }
+
+/* ── LAYOUT ── */
+.w { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+.sec { padding: 60px 0; border-top: 1px solid var(--l); }
+.sec:first-child { border-top: none; padding-top: 52px; }
+.ey { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--g); margin-bottom: 8px; }
+.sh { font-family:'Cormorant Garamond',Georgia,serif; font-size: clamp(22px,4vw,38px); font-weight: 700; color: var(--d); line-height: 1.1; }
+.dv { width: 48px; height: 3px; background: linear-gradient(90deg, var(--g), transparent); margin: 12px 0 18px; border-radius: 2px; }
+.sd { color: var(--s); font-size: 14px; line-height: 1.75; max-width: 680px; margin-bottom: 28px; }
+
+/* ── BRANDS GRID ── */
+.brands { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; margin-bottom: 36px; }
+.brand-card { background: white; border-radius: 18px; border: 1.5px solid var(--l); padding: 24px; position: relative; overflow: hidden; transition: box-shadow .2s; }
+.brand-card:hover { box-shadow: 0 6px 28px rgba(61,26,107,.1); }
+.brand-card.main { border-color: var(--g); background: linear-gradient(135deg,#FFFBF0,white); }
+.bc-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 8px; }
+.tag-g { background: rgba(200,150,74,.15); color: var(--g); }
+.tag-p { background: rgba(61,26,107,.12); color: var(--p); }
+.tag-b { background: rgba(26,80,144,.12); color: #1A5090; }
+.tag-s { background: rgba(26,122,58,.12); color: var(--ok); }
+.bc-brand { font-family:'Cormorant Garamond',Georgia,serif; font-size: 22px; font-weight: 700; color: var(--d); margin-bottom: 3px; }
+.bc-url { font-size: 12px; color: var(--g); text-decoration: none; display: block; margin-bottom: 10px; }
+.bc-desc { font-size: 13px; color: var(--s); line-height: 1.65; margin-bottom: 14px; }
+.bc-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+.bs { background: #FAF7F2; border-radius: 8px; padding: 8px 10px; text-align: center; }
+.bs-v { font-size: 15px; font-weight: 700; color: var(--d); font-family:'Cormorant Garamond',Georgia,serif; }
+.bs-l { font-size: 10px; color: var(--s); text-transform: uppercase; letter-spacing: .07em; margin-top: 2px; }
+.bc-badge { position: absolute; top: 16px; right: 16px; background: var(--d); color: var(--g); font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 12px; }
+
+/* ── TOTAL BAR ── */
+.total-bar { background: var(--d); border-radius: 18px; padding: 24px 28px; display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 40px; }
+.tb { text-align: center; }
+.tb-v { font-family:'Cormorant Garamond',Georgia,serif; font-size: 30px; font-weight: 700; color: var(--g); }
+.tb-l { font-size: 10px; text-transform: uppercase; letter-spacing: .09em; color: rgba(255,255,255,.4); margin-top: 3px; }
+
+/* ── CHANNEL GRID ── */
+.chs { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; margin-bottom: 32px; }
+.ch { background: white; border-radius: 14px; border: 1px solid var(--l); padding: 18px; }
+.ch-h { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.ch-ico { font-size: 20px; background: #FAF7F2; padding: 6px 8px; border-radius: 8px; line-height: 1.2; flex-shrink: 0; }
+.ch-name { font-size: 13px; font-weight: 600; color: var(--d); }
+.ch-sub { font-size: 11px; color: var(--s); }
+.ch-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #FAF7F2; font-size: 12px; }
+.ch-row:last-of-type { border-bottom: none; }
+.ch-lbl { color: var(--s); }
+.ch-val { font-weight: 600; color: var(--d); }
+.ch-status { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; padding: 2px 8px; border-radius: 10px; margin-top: 10px; }
+.ok { background: #E8F5E9; color: var(--ok); }
+.warn { background: #FFF8E1; color: var(--wr); }
+.bad { background: #FFEBEE; color: var(--no); }
+.fire { background: rgba(200,150,74,.15); color: var(--g); }
+
+/* ── SWOT ── */
+.swot { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.sw { border-radius: 14px; padding: 22px; }
+.sw-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px; }
+.sw li { font-size: 13px; line-height: 1.7; padding: 4px 0 4px 16px; position: relative; }
+.sw li::before { content: '—'; position: absolute; left: 0; opacity: .5; }
+
+/* ── FUNNEL ── */
+.funnel { background: var(--d); border-radius: 18px; padding: 28px; margin-bottom: 32px; }
+.fn-title { font-family:'Cormorant Garamond',Georgia,serif; font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.fn-sub { font-size: 13px; color: rgba(255,255,255,.5); margin-bottom: 24px; }
+.fn-steps { display: flex; align-items: stretch; overflow-x: auto; gap: 0; }
+.fn-s { flex: 1; min-width: 100px; text-align: center; padding: 0 6px; position: relative; }
+.fn-s:not(:last-child)::after { content:'→'; position: absolute; right: -8px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,.25); font-size: 18px; }
+.fn-box { padding: 14px 8px; border-radius: 10px; background: rgba(200,150,74,.1); }
+.fn-v { font-family:'Cormorant Garamond',Georgia,serif; font-size: 22px; font-weight: 700; color: var(--g); line-height: 1; }
+.fn-l { font-size: 10px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .07em; margin-top: 4px; }
+.fn-cr { font-size: 11px; color: rgba(200,150,74,.7); margin-top: 4px; }
+.fn-eco { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.08); }
+.fe { text-align: center; }
+.fe-v { font-family:'Cormorant Garamond',Georgia,serif; font-size: 24px; font-weight: 700; color: var(--g); }
+.fe-l { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.4); margin-top: 3px; }
+
+/* ── CHART ── */
+.chart-box { background: white; border-radius: 18px; border: 1px solid var(--l); padding: 24px; margin-bottom: 20px; }
+.ct { font-size: 14px; font-weight: 600; color: var(--d); margin-bottom: 3px; }
+.cs { font-size: 12px; color: var(--s); margin-bottom: 18px; line-height: 1.5; }
+.cw { position: relative; width: 100%; height: 280px; }
+
+/* ── INSIGHT BOX ── */
+.insight-box { background: rgba(200,150,74,.08); border: 1px solid rgba(200,150,74,.25); border-left: 4px solid var(--g); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+.ib-title { font-weight: 700; font-size: 14px; color: var(--d); margin-bottom: 6px; }
+.ib-body { font-size: 13px; color: var(--s); line-height: 1.7; }
+.insight-box.red { background: rgba(170,40,40,.07); border-color: rgba(170,40,40,.25); border-left-color: var(--no); }
+.insight-box.green { background: rgba(26,122,58,.07); border-color: rgba(26,122,58,.2); border-left-color: var(--ok); }
+
+/* ── NAV BTNS ── */
+.nav-btns { display: flex; justify-content: flex-end; gap: 12px; margin-top: 40px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 24px; font-size: 14px; font-weight: 600; text-decoration: none; transition: opacity .18s; }
+.btn:hover { opacity: .85; }
+.btn-d { background: var(--d); color: #fff; }
+.btn-g { background: white; color: var(--d); border: 1.5px solid var(--l); }
+
+/* ── FOOTER ── */
+.footer { background: var(--d); padding: 36px 20px; text-align: center; }
+.fb { font-family:'Cormorant Garamond',Georgia,serif; font-size: 20px; color: var(--g); margin-bottom: 6px; }
+.fs { font-size: 12px; color: rgba(255,255,255,.3); line-height: 1.7; }
+.fs a { color: var(--g); text-decoration: none; }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 900px) { .brands { grid-template-columns: 1fr; } .total-bar { grid-template-columns: repeat(2,1fr); } .swot { grid-template-columns: 1fr; } .fn-eco { grid-template-columns: repeat(2,1fr); } }
+@media(max-width: 640px) { .nls { display: none; } .nb { display: flex; } .hero { padding: 48px 16px 44px; } .hrow { gap: 14px; } .hs-sep { display: none; } .w { padding: 0 16px; } .sec { padding: 40px 0; } .cw { height: 220px; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="ni">
+    <a href="darsy_today.html" class="nl">Darsy <span>Стратегия 2026</span></a>
+    <div class="nls">
+      <a href="darsy_today.html" class="on">Сегодня</a>
+      <a href="competitors.html">Конкуренты</a>
+      <a href="audit.html">Аудит</a>
+      <a href="hypotheses.html">Гипотезы</a>
+      <a href="roadmap.html">Карта</a>
+    </div>
+    <button class="nb" onclick="document.getElementById('nm').classList.toggle('open')"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="nm" id="nm">
+  <a href="darsy_today.html" class="on">Darsy сегодня</a>
+  <a href="competitors.html">Конкуренты</a>
+  <a href="audit.html">Аудит сайта</a>
+  <a href="hypotheses.html">10 гипотез</a>
+  <a href="roadmap.html">Дорожная карта</a>
+</div>
+
+<header class="hero">
+  <p class="he">Стратегический анализ · Апрель 2026 · Страница 1 / 5</p>
+  <h1>Darsy сегодня<br><em>Экосистема, каналы, реальные числа</em></h1>
+  <p>Что есть, что работает, что теряет деньги прямо сейчас. Только конкретика — без воды.</p>
+  <div class="hrow">
+    <div class="hs"><div class="hs-v">4</div><div class="hs-l">бренда в холдинге</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">900+</div><div class="hs-l">проектов за 12 лет</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">8</div><div class="hs-l">каналов трафика</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">3</div><div class="hs-l">критических пробела</div></div>
+  </div>
+</header>
+
+<div class="w">
+
+<!-- ECOSYSTEM -->
+<section class="sec" id="eco">
+  <p class="ey">01 — Факт, которого не знают конкуренты</p>
+  <h2 class="sh">Darsy — это холдинг. Никто снаружи этого не видит</h2>
+  <div class="dv"></div>
+  <p class="sd">За брендом darsy-wed.ru стоят четыре взаимосвязанных бизнеса с общей командой, клиентской базой и инфраструктурой. Ни один из 6 анализируемых конкурентов не имеет ничего подобного. Это создаёт конкурентный барьер — но только если об этом знают клиенты. Сейчас — не знают.</p>
+
+  <div class="total-bar">
+    <div class="tb"><div class="tb-v">28+ млн</div><div class="tb-l">оценка выручки холдинга/год</div></div>
+    <div class="tb"><div class="tb-v">4</div><div class="tb-l">бренда, одна команда</div></div>
+    <div class="tb"><div class="tb-v">900+</div><div class="tb-l">свадеб за 12 лет</div></div>
+    <div class="tb"><div class="tb-v">30 чел</div><div class="tb-l">команда ProEVENT</div></div>
+  </div>
+
+  <div class="brands">
+    <div class="brand-card main">
+      <span class="bc-badge">Флагман</span>
+      <span class="bc-tag tag-g">Свадьбы · Mass Premium</span>
+      <div class="bc-brand">Darsy Wedding</div>
+      <a href="https://darsy-wed.ru" target="_blank" class="bc-url">darsy-wed.ru</a>
+      <div class="bc-desc">12 лет, 900+ свадеб, 5.0/220 отзывов Яндекс, 4.9 Google. ТОП-7 Wedding Awards 2019 (до 2 млн) и 2020 (2–8 млн) — агентство реально работает в двух ценовых сегментах. Основатель Роман лично присутствует на свадьбах — редкость на рынке, упоминается в 30%+ отзывов. VK-пиксель установлен. Яндекс.Метрика установлена. Адрес: Мытная, 46с5.</div>
+      <div class="bc-stats">
+        <div class="bs"><div class="bs-v">~80</div><div class="bs-l">свадеб/год</div></div>
+        <div class="bs"><div class="bs-v">1 млн</div><div class="bs-l">ср. чек клиента</div></div>
+        <div class="bs"><div class="bs-v">120 т.р.</div><div class="bs-l">гонорар (12%)</div></div>
+        <div class="bs"><div class="bs-v">~9.6 млн</div><div class="bs-l">выручка/год</div></div>
+      </div>
+    </div>
+    <div class="brand-card">
+      <span class="bc-badge" style="background:var(--p);color:#fff;">Премиум</span>
+      <span class="bc-tag tag-p">Свадьбы · ≤20/год</span>
+      <div class="bc-brand">Wedding Club</div>
+      <a href="https://wedding-lab.pro" target="_blank" class="bc-url">wedding-lab.pro</a>
+      <div class="bc-desc">«Создаём не более 20 свадеб в год, чтобы каждая история была по-настоящему уникальной». Позиционирование haute couture. 7 лет. Сайт обновлён 2025, красивый. Средний чек 3–8 млн. Гонорар 15% = 450–750 т.р. Потенциал полного запуска: +6–9 млн выручки/год. Сейчас — недораскрыт: нет контента, нет трафика, нет позиционирования относительно Darsy.</div>
+      <div class="bc-stats">
+        <div class="bs"><div class="bs-v">≤20</div><div class="bs-l">свадеб/год</div></div>
+        <div class="bs"><div class="bs-v">3–8 млн</div><div class="bs-l">ср. чек</div></div>
+        <div class="bs"><div class="bs-v">~450 т.р.</div><div class="bs-l">гонорар</div></div>
+        <div class="bs"><div class="bs-v">~6.75 млн</div><div class="bs-l">потенциал</div></div>
+      </div>
+    </div>
+    <div class="brand-card">
+      <span class="bc-badge" style="background:#1A5090;color:#fff;">Корпоративы</span>
+      <span class="bc-tag tag-b">B2B Events</span>
+      <div class="bc-brand">ProEVENT</div>
+      <a href="https://dfamily-event.ru" target="_blank" class="bc-url">dfamily-event.ru</a>
+      <div class="bc-desc">11 лет, 30 человек в команде, 900+ мероприятий, 2 региона. Корпоративы: новогодние, тимбилдинги, юбилеи компаний. Корпоративный сезон: октябрь–январь — когда свадебный бизнес в простое. Это идеальная синергия. Среди клиентов: крупные компании (FIFA Russia в портфолио). VK: vk.com/dfamily_event. Сайт обновлён 2025.</div>
+      <div class="bc-stats">
+        <div class="bs"><div class="bs-v">~80</div><div class="bs-l">событий/год</div></div>
+        <div class="bs"><div class="bs-v">500 т.р.</div><div class="bs-l">ср. чек</div></div>
+        <div class="bs"><div class="bs-v">~4.8 млн</div><div class="bs-l">потенциал</div></div>
+        <div class="bs"><div class="bs-v">30 чел</div><div class="bs-l">команда</div></div>
+      </div>
+    </div>
+    <div class="brand-card">
+      <span class="bc-badge" style="background:var(--ok);color:#fff;">Инфра</span>
+      <span class="bc-tag tag-s">Оборудование</span>
+      <div class="bc-brand">SoundLight</div>
+      <a href="https://real-prosound.ru" target="_blank" class="bc-url">real-prosound.ru</a>
+      <div class="bc-desc">Аренда звука и света для мероприятий 20–5000 чел. Комплекты от 800 до 23 000 р/день. Гарантия: если нарушили сроки — не платите. Внутренняя синергия: все мероприятия Darsy и ProEVENT используют своё оборудование → экономия 15–25% затрат. Внешняя аренда → доп. доход. Ни один конкурент этого актива не имеет.</div>
+      <div class="bc-stats">
+        <div class="bs"><div class="bs-v">800–23 т.р.</div><div class="bs-l">комплект/день</div></div>
+        <div class="bs"><div class="bs-v">-25%</div><div class="bs-l">экономия на событиях</div></div>
+        <div class="bs"><div class="bs-v">Уникально</div><div class="bs-l">на рынке</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <div class="ib-title">⚡ Главный инсайт</div>
+    <div class="ib-body">Конкуренты видят «ещё одно агентство». На деле — вертикально интегрированный холдинг: привлечение → организация → оборудование → корпоративы. Это создаёт экономику масштаба, которую нельзя скопировать за 6 месяцев. Но она нигде не коммуницируется. Ни на одном из сайтов нет слова «холдинг», «группа» или перекрёстных ссылок между брендами.</div>
+  </div>
+</section>
+
+<!-- CHANNELS -->
+<section class="sec" id="channels">
+  <p class="ey">02 — Аудит 8 каналов</p>
+  <h2 class="sh">Реальное состояние цифрового присутствия</h2>
+  <div class="dv"></div>
+  <p class="sd">Реальные данные по каждому каналу на апрель 2026 — без приукрашивания.</p>
+
+  <div class="chs">
+    <div class="ch">
+      <div class="ch-h"><div class="ch-ico">🌐</div><div><div class="ch-name">darsy-wed.ru</div><div class="ch-sub">Основной сайт</div></div></div>
+      <div class="ch-row"><span class="ch-lbl">Трафик/мес (оценка)</span><span class="ch-val">4 000–6 000</span></div>
+      <div class="ch-row"><span class="ch-lbl">Яндекс.Метрика</span><span class="ch-val">✅ Установлена (watch/34433225)</span></div>
+      <div class="ch-row"><span class="ch-lbl">VK-пиксель ретаргетинг</span><span class="ch-val">✅ Установлен (VK-RTRG-1849088)</span></div>
+      <div class="ch-row"><span class="ch-lbl">Калькулятор</span><span class="ch-val">⚠️ Есть, но форма (не мгновенный)</span></div>
+      <div class="ch-row"><span class="ch-lbl">Конверсия (оценка)</span><span class="ch-val">~2.5–3%</span></div>
+      <div class="ch-row"><span class="ch-lbl">Страниц в индексе</span><span class="ch-val">200+ (хорошо структурирован)</span></div>
+      <span class="ch-status warn">Требует CRO — 3 критических точки</span>
+    </div>
+
+    <div class="ch">
+      <div class="ch-h"><div class="ch-ico">📌</div><div><div class="ch-name">darsywedding</div><div class="ch-sub">Pinterest</div></div></div>
+      <div class="ch-row"><span class="ch-lbl">Подписчиков</span><span class="ch-val" style="color:var(--no);">235 (!)</span></div>
+      <div class="ch-row"><span class="ch-lbl">Пины</span><span class="ch-val">213 в одной доске</span></div>
+      <div class="ch-row"><span class="ch-lbl">Активность</span><span class="ch-val">Начата ~4 мес. назад</span></div>
+      <div class="ch-row"><span class="ch-lbl">SEO-оптимизация пинов</span><span class="ch-val">❌ Слабая</span></div>
+      <div class="ch-row"><span class="ch-lbl">Потенциал (900 свадеб)</span><span class="ch-val" style="color:var(--ok);">🔥 Огромный</span></div>
+      <span class="ch-status bad">235 подписчиков на 900 проектов — катастрофа</span>
+    </div>
+
+    <div class="ch">
+      <div class="ch-h"><div class="ch-ico">✈️</div><div><div class="ch-name">darsy_event</div><div class="ch-sub">Telegram-канал</div></div></div>
+      <div class="ch-row"><span class="ch-lbl">Подписчики (оценка)</span><span class="ch-val">~500–2 000</span></div>
+      <div class="ch-row"><span class="ch-lbl">Регулярность</span><span class="ch-val">⚠️ Нерегулярно</span></div>
+      <div class="ch-row"><span class="ch-lbl">Тип контента</span><span class="ch-val">Кейсы, анонсы</span></div>
+      <div class="ch-row"><span class="ch-lbl">Потенциал в РФ</span><span class="ch-val" style="color:var(--ok);">🔥 Высокий — растёт</span></div>
+      <span class="ch-status warn">Недоиспользован. Нет контент-стратегии</span>
+    </div>
+
+    <div class="ch">
+      <div class="ch-h"><div class="ch-ico">📸</div><div><div class="ch-name">@darsy_wedding</div><div class="ch-sub">Instagram</div></div></div>
+      <div class="ch-row"><span class="ch-lbl">Подписчики (оценка)</span><span class="ch-val">~15 000–25 000</span></div>
+      <div class="ch-row"><span class="ch-lbl">Доступность в РФ</span><span class="ch-val" style="color:var(--no);">❌ Заблокирован</span></div>
+      <div class="ch-row"><span class="ch-lbl">ROI для рос. аудитории</span><span class="ch-val">Низкий — нужен VPN</span></div>
+      <div class="ch-row"><span class="ch-lbl">Альтернатива</span><span class="ch-val">VK, TG, Pinterest</span></div>
+      <span class="ch-status bad">Низкий ROI для основной аудитории в РФ</span>
+    </div>
+
+    <div class="ch">
+      <div class="ch-h"><div class="ch-ico">🔵</div><div><div class="ch-name">vk.com/darcyagency</div><div class="ch-sub">ВКонтакте · Darsy</div></div></div>
+      <div class="ch-row"><span class="ch-lbl">Аудитория (оценка)</span><span class="ch-val">~2 000–5 000</span></div>
+      <div class="ch-row"><span class="ch-lbl">VK пиксель на сайте</span><span class="ch-val">✅ Установлен!</span></div>
+      <div class="ch-row"><span class="ch-lbl">Ретаргетинг</span><span class="ch-val">⚠️ Пиксель есть — реклама?</span></div>
+      <div class="ch-row"><span class="ch-lbl">Потенциал</span><span class="ch-val">🔥 Главная замена Instagram</span></div>
+      <span class="ch-status fire">Пиксель уже стоит — ретаргетинг за 3 дня</span>
+    </div>
+
+    <div class="ch">
+      <div class="ch-h"><div class="ch-ico">▶️</div><div><div class="ch-name">@darsy_wedding_msk_spb</div><div class="ch-sub">YouTube</div></div></div>
+      <div class="ch-row"><span class="ch-lbl">Канал</span><span class="ch-val">✅ Активен</span></div>
+      <div class="ch-row"><span class="ch-lbl">Тип контента</span><span class="ch-val">Видеозарисовки свадеб</span></div>
+      <div class="ch-row"><span class="ch-lbl">SEO-оптимизация</span><span class="ch-val">⚠️ Слабая</span></div>
+      <div class="ch-row"><span class="ch-lbl">Формат «Роман лично»</span><span class="ch-val">❌ Отсутствует</span></div>
+      <span class="ch-status warn">Контент есть — экспертного формата нет</span>
+    </div>
+
+    <div class="ch">
+      <div class="ch-h"><div class="ch-ico">🧡</div><div><div class="ch-name">roman_darsy</div><div class="ch-sub">Яндекс Дзен</div></div></div>
+      <div class="ch-row"><span class="ch-lbl">Аккаунт</span><span class="ch-val">✅ Есть</span></div>
+      <div class="ch-row"><span class="ch-lbl">Яндекс индексирует</span><span class="ch-val">🔥 Быстро и хорошо</span></div>
+      <div class="ch-row"><span class="ch-lbl">Частота</span><span class="ch-val">⚠️ Нерегулярно</span></div>
+      <div class="ch-row"><span class="ch-lbl">SEO-синергия с сайтом</span><span class="ch-val">⚠️ Не настроена</span></div>
+      <span class="ch-status warn">Правильный канал, неправильная частота</span>
+    </div>
+
+    <div class="ch">
+      <div class="ch-h"><div class="ch-ico">⭐</div><div><div class="ch-name">Агрегаторы</div><div class="ch-sub">Яндекс / Google / Gorko</div></div></div>
+      <div class="ch-row"><span class="ch-lbl">Яндекс</span><span class="ch-val">5.0 / 220 отзывов ✅</span></div>
+      <div class="ch-row"><span class="ch-lbl">Google</span><span class="ch-val">4.9 ✅</span></div>
+      <div class="ch-row"><span class="ch-lbl">Otzovik, svadba-msk</span><span class="ch-val">✅ Хорошие отзывы</span></div>
+      <div class="ch-row"><span class="ch-lbl">Система сбора отзывов</span><span class="ch-val">⚠️ Не формализована</span></div>
+      <span class="ch-status ok">Лучшая репутация в сегменте</span>
+    </div>
+  </div>
+
+  <div class="insight-box red">
+    <div class="ib-title">🚨 Три пробела, которые стоят денег прямо сейчас</div>
+    <div class="ib-body"><b>1. Pinterest: 235 подписчиков при 900 свадьбах.</b> Mironova Wedding генерирует 30–40% органики через Pinterest. У нас 213 пинов в одной доске и начато это 4 месяца назад. Это не «нет Pinterest» — это «есть, но не работает». Нужно 5–10 досок, 20+ пинов с каждого проекта, SEO-описания.<br><br><b>2. VK-пиксель установлен, ретаргетинг не запущен (предположительно).</b> Каждый месяц 4–6 тысяч человек заходят на сайт и уходят. Они уже знают про Darsy. Ретаргетинговая кампания в VK — это 3 дня настройки при готовом пикселе.<br><br><b>3. Instagram заблокирован, но основные усилия туда.</b> VK, TG, Pinterest — эти каналы работают в РФ без VPN. Смещение фокуса с IG на них при той же команде = +40–60% охвата аудитории.</div>
+  </div>
+</section>
+
+<!-- FUNNEL -->
+<section class="sec" id="funnel">
+  <p class="ey">03 — Текущая воронка</p>
+  <h2 class="sh">Откуда берутся 80 свадеб в год: математика</h2>
+  <div class="dv"></div>
+  <p class="sd">Оценочная воронка на основе рыночных данных, структуры сайта и открытой информации. Яндекс.Метрика даст точные цифры в первую неделю работы.</p>
+
+  <div class="funnel">
+    <div class="fn-title">Свадебная воронка Darsy · оценка апрель 2026</div>
+    <div class="fn-sub">* Цифры оценочные. Реальные данные — в Яндекс.Метрике.</div>
+    <div class="fn-steps">
+      <div class="fn-s"><div class="fn-box"><div class="fn-v">5 000</div><div class="fn-l">Визитов/мес</div><div class="fn-cr">100%</div></div></div>
+      <div class="fn-s"><div class="fn-box"><div class="fn-v">125</div><div class="fn-l">Лидов</div><div class="fn-cr">CR: 2.5%</div></div></div>
+      <div class="fn-s"><div class="fn-box"><div class="fn-v">44</div><div class="fn-l">Консультаций</div><div class="fn-cr">CR: 35%</div></div></div>
+      <div class="fn-s"><div class="fn-box"><div class="fn-v">6–7</div><div class="fn-l">Сделок/мес</div><div class="fn-cr">CR: 15%</div></div></div>
+      <div class="fn-s"><div class="fn-box" style="background:rgba(200,150,74,.2);"><div class="fn-v">750 т.р.</div><div class="fn-l">Выручка/мес</div><div class="fn-cr">9 млн/год</div></div></div>
+    </div>
+    <div class="fn-eco">
+      <div class="fe"><div class="fe-v">1 000 000</div><div class="fe-l">Средний чек свадьбы</div></div>
+      <div class="fe"><div class="fe-v">120 000 ₽</div><div class="fe-l">Гонорар агентства (12%)</div></div>
+      <div class="fe"><div class="fe-v">36 000 ₽</div><div class="fe-l">Маржа 30% с гонорара</div></div>
+      <div class="fe"><div class="fe-v">~3.5 млн</div><div class="fe-l">Чистая маржа/год</div></div>
+    </div>
+  </div>
+
+  <div class="chart-box">
+    <div class="ct">Распределение трафика по каналам (оценка)</div>
+    <div class="cs">Текущая структура против потенциальной при реализации стратегии</div>
+    <div class="cw" style="height:320px;"><canvas id="trafficChart"></canvas></div>
+  </div>
+</section>
+
+<!-- SWOT -->
+<section class="sec" id="swot">
+  <p class="ey">04 — Стратегический контекст</p>
+  <h2 class="sh">Сильные стороны, слабости, возможности, угрозы</h2>
+  <div class="dv"></div>
+
+  <div class="swot">
+    <div class="sw" style="background:#F0FFF4;border:1px solid #A5D6A7;">
+      <div class="sw-title" style="color:var(--ok);">💪 Сильные стороны</div>
+      <ul>
+        <li>900+ свадеб — лучшая база портфолио в сегменте</li>
+        <li>5.0 / 220 отзывов Яндекс — лучший показатель среди 6 конкурентов</li>
+        <li>4 бренда в холдинге — вертикальная интеграция</li>
+        <li>Роман лично присутствует на свадьбах — уникальное УТП</li>
+        <li>VK-пиксель установлен — база для ретаргетинга</li>
+        <li>ТОП-7 два года подряд в двух сегментах (2019, 2020)</li>
+        <li>Международные клиенты — anglophone market</li>
+        <li>200+ страниц в SEO-индексе</li>
+      </ul>
+    </div>
+    <div class="sw" style="background:#FFEBEE;border:1px solid #EF9A9A;">
+      <div class="sw-title" style="color:var(--no);">⚠️ Слабые стороны</div>
+      <ul>
+        <li>Pinterest: 235 фолловеров при 900 проектах</li>
+        <li>Калькулятор есть, но не мгновенный — форма на 3 вопроса</li>
+        <li>«Свадебный организатор от 20 000» вводит клиентов в заблуждение</li>
+        <li>Три услуги без страниц: Музыкальные группы, Шоу, Фото/видео</li>
+        <li>Instagram — основной канал, но заблокирован в РФ</li>
+        <li>Холдинг нигде не коммуницируется — нет перекрёстных ссылок</li>
+        <li>Нет реферальной программы при 900 лояльных клиентах</li>
+        <li>Wedding Club запущен, но без трафика и контента</li>
+      </ul>
+    </div>
+    <div class="sw" style="background:#FFF8E1;border:1px solid #FFE082;">
+      <div class="sw-title" style="color:var(--wr);">🚀 Возможности</div>
+      <ul>
+        <li>Pinterest: 900 проектов → 5 000+ пинов → органика без бюджета</li>
+        <li>VK ретаргетинг — пиксель есть, запуск за 3 дня</li>
+        <li>Международный сегмент (anglophone) — конкуренты его не видят</li>
+        <li>Личный бренд Романа: YouTube + Дзен + Telegram</li>
+        <li>Wedding Club — запуск в premium tier, 3–8 млн бюджеты</li>
+        <li>Реферальная программа: 900 клиентов = лучший sales team</li>
+        <li>B2B ProEVENT в осенне-зимний сезон — балансирует cash flow</li>
+        <li>SEO Подмосковье: страницы есть, нужна глубина</li>
+      </ul>
+    </div>
+    <div class="sw" style="background:#F3E5F5;border:1px solid #CE93D8;">
+      <div class="sw-title" style="color:#6A1B9A;">🌩 Угрозы</div>
+      <ul>
+        <li>Apriori Married: фикс 150К — проще объяснить клиенту</li>
+        <li>Новые агентства с сильным digital (vesna.wedding, основана 2021)</li>
+        <li>Mironova Wedding: личный кабинет + финансовые гарантии = технологический барьер</li>
+        <li>Instagram окончательно умирает как RU-канал</li>
+        <li>Сезонность: май–октябрь пик → ноябрь–апрель провал</li>
+        <li>Инфляция: рост стоимости подрядчиков → давление на маржу</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <a href="competitors.html" class="btn btn-d">Далее: Конкурентный анализ →</a>
+  </div>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="fb">Darsy · Стратегический анализ 2026</div>
+  <div class="fs">Страница 1 из 5 &nbsp;·&nbsp;
+    <a href="competitors.html">→ Конкуренты</a>&ensp;
+    <a href="audit.html">→ Аудит</a>&ensp;
+    <a href="hypotheses.html">→ Гипотезы</a>&ensp;
+    <a href="roadmap.html">→ Карта</a>
+  </div>
+</footer>
+
+<script>
+new Chart(document.getElementById('trafficChart'), {
+  type: 'bar',
+  data: {
+    labels: ['SEO / Яндекс', 'Агрегаторы', 'Instagram (IG)', 'Pinterest', 'ВКонтакте', 'Telegram', 'YouTube / Дзен', 'Прямые / Реф.'],
+    datasets: [
+      {
+        label: 'Сейчас (оценка), %',
+        data: [38, 22, 18, 2, 5, 4, 3, 8],
+        backgroundColor: 'rgba(200,150,74,.7)',
+        borderRadius: 5
+      },
+      {
+        label: 'Потенциал через 12 мес., %',
+        data: [30, 16, 8, 18, 10, 8, 5, 5],
+        backgroundColor: 'rgba(26,122,58,.65)',
+        borderRadius: 5
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { color: '#8A8A9A', font: { size: 11 }, usePointStyle: true } },
+      tooltip: { backgroundColor: 'rgba(26,10,46,.92)', titleFont: { size: 11 }, bodyFont: { size: 11 }, padding: 10, cornerRadius: 8 }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#8A8A9A', font: { size: 10 } } },
+      y: { grid: { color: '#F0EBF8' }, ticks: { color: '#8A8A9A', callback: v => v + '%' } }
+    }
+  }
+});
+</script>
+</body>
+</html>

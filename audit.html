@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Аудит сайта & CJM — Darsy 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+@import url('https://fonts.bunny.net/css?family=cormorant-garamond:400,600,700,700i|dm-sans:400,500,600');
+:root{--c:#FAF7F2;--d:#1A0A2E;--g:#C8964A;--p:#3D1A6B;--s:#8A8A9A;--l:#EAE4F5;--ok:#1A7A3A;--no:#AA2828;--wr:#E65100;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--c);color:var(--d);font-family:'DM Sans','Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(250,247,242,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--l);display:flex;align-items:center;}
+.ni{width:100%;max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.nl{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;font-weight:700;color:var(--d);text-decoration:none;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.nl span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);font-weight:600;background:rgba(200,150,74,.13);padding:2px 8px;border-radius:10px;}
+.nls{display:flex;gap:3px;}
+.nls a{font-size:11px;font-weight:500;color:var(--s);text-decoration:none;padding:5px 10px;border-radius:20px;white-space:nowrap;transition:all .18s;}
+.nls a:hover{color:var(--d);background:var(--l);}
+.nls a.on{background:var(--d);color:#fff;}
+.nb{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:8px;border:none;background:none;width:40px;height:40px;flex-shrink:0;}
+.nb span{display:block;width:22px;height:2px;background:var(--d);border-radius:2px;}
+.nm{display:none;flex-direction:column;gap:2px;padding:12px 16px 16px;border-bottom:1px solid var(--l);background:rgba(250,247,242,.98);position:sticky;top:60px;z-index:199;}
+.nm a{font-size:14px;font-weight:500;color:var(--s);text-decoration:none;padding:10px 14px;border-radius:10px;}
+.nm a:hover,.nm a.on{color:var(--d);background:var(--l);}
+.nm.open{display:flex;}
+.hero{background:linear-gradient(140deg,#0C0A20 0%,var(--d) 60%,#180A40 100%);padding:68px 20px 56px;text-align:center;overflow:hidden;}
+.he{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g);margin-bottom:14px;}
+.hero h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(28px,6vw,52px);font-weight:700;color:#fff;line-height:1.08;margin-bottom:16px;word-break:break-word;padding:0 4px;}
+.hero h1 em{color:var(--g);font-style:italic;}
+.hero p{font-size:clamp(13px,3vw,15px);color:rgba(255,255,255,.6);max-width:560px;margin:0 auto 36px;line-height:1.75;}
+.hrow{display:flex;justify-content:center;gap:clamp(12px,3vw,28px);flex-wrap:wrap;}
+.hs{text-align:center;}.hs-v{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(24px,5vw,34px);font-weight:700;color:var(--g);line-height:1;}
+.hs-l{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-top:4px;}
+.hs-sep{width:1px;background:rgba(255,255,255,.12);align-self:stretch;}
+.w{max-width:1280px;margin:0 auto;padding:0 20px;}
+.sec{padding:60px 0;border-top:1px solid var(--l);}
+.sec:first-child{border-top:none;padding-top:52px;}
+.ey{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g);margin-bottom:8px;}
+.sh{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,4vw,38px);font-weight:700;color:var(--d);line-height:1.1;}
+.dv{width:48px;height:3px;background:linear-gradient(90deg,var(--g),transparent);margin:12px 0 18px;border-radius:2px;}
+.sd{color:var(--s);font-size:14px;line-height:1.75;max-width:680px;margin-bottom:28px;}
+
+/* CJM */
+.cjm-wrap{overflow-x:auto;margin-bottom:28px;}
+.cjm{display:flex;min-width:800px;}
+.cjm-stage{flex:1;display:flex;flex-direction:column;border-right:1px solid var(--l);}
+.cjm-stage:last-child{border-right:none;}
+.cjm-head{padding:10px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;text-align:center;color:#fff;}
+.cjm-body{flex:1;display:flex;flex-direction:column;}
+.cjm-row{padding:8px 10px;border-bottom:1px solid #FAF7F2;font-size:11px;}
+.cjm-row:last-child{border-bottom:none;}
+.cjm-rl{font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--s);margin-bottom:2px;}
+.cjm-rv{color:var(--d);line-height:1.4;}
+.cjm-emo{text-align:center;padding:8px;font-size:20px;border-top:1px solid var(--l);}
+.cjm-drop{text-align:center;padding:5px 8px;font-size:10px;font-weight:700;}
+.alert-red{background:rgba(170,40,40,.08);border:1px solid rgba(170,40,40,.2);border-left:4px solid var(--no);border-radius:14px;padding:18px;margin-bottom:16px;}
+.alert-red .at{font-weight:700;font-size:14px;color:var(--no);margin-bottom:6px;}
+.alert-red .ab{font-size:13px;color:var(--d);line-height:1.7;}
+
+/* STAT STRIP */
+.stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.sbox{background:var(--d);border-radius:14px;padding:20px 16px;text-align:center;}
+.sv{font-family:'Cormorant Garamond',Georgia,serif;font-size:36px;font-weight:700;color:var(--g);}
+.sl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.4);margin-top:4px;}
+
+/* TABS */
+.tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.tab{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--l);background:white;color:var(--s);transition:all .18s;}
+.tab:hover{border-color:var(--p);color:var(--d);}
+.tab.on{background:var(--d);color:#fff;border-color:var(--d);}
+
+/* AUDIT TABLE */
+.aud-wrap{background:white;border-radius:16px;border:1px solid var(--l);overflow:hidden;}
+.aud-head{display:grid;background:var(--d);padding:10px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.55);}
+.aud-row{display:grid;padding:12px 16px;border-bottom:1px solid #FAF7F2;align-items:start;transition:background .14s;}
+.aud-row:last-child{border-bottom:none;}
+.aud-row:hover{background:#FAF7F2;}
+.a5{grid-template-columns:28px 100px 1fr 1fr 80px;gap:10px;}
+.an{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;font-weight:700;color:var(--g);}
+.az{font-size:11px;font-weight:600;color:var(--p);line-height:1.3;}
+.ap{font-size:12px;color:var(--d);line-height:1.55;}
+.af{font-size:12px;color:var(--s);line-height:1.55;}
+.ai{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:12px;white-space:nowrap;}
+.ai-r{background:#FFEBEE;color:var(--no);}
+.ai-o{background:#FFF8E1;color:var(--wr);}
+.ai-g{background:#E8F5E9;color:var(--ok);}
+.sev1{border-left:4px solid var(--no);}
+.sev2{border-left:4px solid var(--wr);}
+.sev3{border-left:4px solid var(--g);}
+
+/* PRIORITY CARDS */
+.prio3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
+.pc{background:white;border-radius:14px;border:1px solid var(--l);padding:20px;}
+.pc-n{font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:700;line-height:1;margin-bottom:6px;}
+.pc-t{font-weight:700;font-size:14px;color:var(--d);margin-bottom:6px;}
+.pc-b{font-size:13px;color:var(--s);line-height:1.6;margin-bottom:10px;}
+.pc-impact{font-size:13px;font-weight:700;}
+
+/* CHART */
+.chart-box{background:white;border-radius:16px;border:1px solid var(--l);padding:22px;margin-top:22px;}
+.ct{font-size:14px;font-weight:600;color:var(--d);margin-bottom:3px;}
+.cs{font-size:12px;color:var(--s);margin-bottom:16px;}
+.cw{position:relative;width:100%;height:340px;}
+
+.nav-btns{display:flex;justify-content:space-between;gap:12px;margin-top:40px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:600;text-decoration:none;transition:opacity .18s;}
+.btn:hover{opacity:.85;}
+.btn-d{background:var(--d);color:#fff;}
+.btn-g{background:white;color:var(--d);border:1.5px solid var(--l);}
+.footer{background:var(--d);padding:36px 20px;text-align:center;}
+.fb{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;color:var(--g);margin-bottom:6px;}
+.fs{font-size:12px;color:rgba(255,255,255,.3);line-height:1.7;}
+.fs a{color:var(--g);text-decoration:none;}
+@media(max-width:900px){.stats4{grid-template-columns:repeat(2,1fr);}.prio3{grid-template-columns:1fr;}}
+@media(max-width:640px){.nls{display:none;}.nb{display:flex;}.hero{padding:48px 16px 44px;}.hs-sep{display:none;}.w{padding:0 16px;}.sec{padding:40px 0;}.a5{grid-template-columns:1fr!important;}.aud-head{display:none;}.cw{height:240px;}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="ni">
+    <a href="darsy_today.html" class="nl">Darsy <span>Стратегия 2026</span></a>
+    <div class="nls">
+      <a href="darsy_today.html">Сегодня</a>
+      <a href="competitors.html">Конкуренты</a>
+      <a href="audit.html" class="on">Аудит</a>
+      <a href="hypotheses.html">Гипотезы</a>
+      <a href="roadmap.html">Карта</a>
+    </div>
+    <button class="nb" onclick="document.getElementById('nm').classList.toggle('open')"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="nm" id="nm">
+  <a href="darsy_today.html">Darsy сегодня</a>
+  <a href="competitors.html">Конкуренты</a>
+  <a href="audit.html" class="on">Аудит сайта</a>
+  <a href="hypotheses.html">10 гипотез</a>
+  <a href="roadmap.html">Дорожная карта</a>
+</div>
+
+<header class="hero">
+  <p class="he">Стратегический анализ · Апрель 2026 · Страница 3 / 5</p>
+  <h1>Аудит сайта<br><em>& Клиентский путь</em></h1>
+  <p>Что происходит с клиентом от первого поиска до договора — и где он уходит к конкурентам. 24 конкретные точки потери конверсии с денежной привязкой.</p>
+  <div class="hrow">
+    <div class="hs"><div class="hs-v">24</div><div class="hs-l">точки аудита</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">2</div><div class="hs-l">критических провала</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">+87%</div><div class="hs-l">потенциал конверсии</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs"><div class="hs-v">0 ₽</div><div class="hs-l">стоимость топ-2 фиксов</div></div>
+  </div>
+</header>
+
+<div class="w">
+
+<!-- CJM -->
+<section class="sec" id="cjm">
+  <p class="ey">01 — Customer Journey Map</p>
+  <h2 class="sh">Путь клиента: от «хотим свадьбу» до договора</h2>
+  <div class="dv"></div>
+  <p class="sd">Два красных этапа — где уходит 97.5% и 85% клиентов. Именно там деньги.</p>
+
+  <div class="cjm-wrap">
+    <div class="cjm">
+      <div class="cjm-stage">
+        <div class="cjm-head" style="background:#2A3A5A;">1. Осознание</div>
+        <div class="cjm-body">
+          <div class="cjm-row"><div class="cjm-rl">Действие</div><div class="cjm-rv">Решили жениться. Смотрят агентства.</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Канал</div><div class="cjm-rv">Яндекс, рекомендации друзей</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Мысль</div><div class="cjm-rv">«Нам нужна помощь — не хотим всё делать сами»</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Боль</div><div class="cjm-rv">Не понимают порядок цен</div></div>
+        </div>
+        <div class="cjm-emo">😊</div>
+      </div>
+      <div class="cjm-stage">
+        <div class="cjm-head" style="background:#2A3A5A;">2. Поиск</div>
+        <div class="cjm-body">
+          <div class="cjm-row"><div class="cjm-rl">Запрос</div><div class="cjm-rv">«свадебное агентство москва»</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Видит Darsy</div><div class="cjm-rv">SEO + Яндекс.Карты + 5.0 отзывы</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Мысль</div><div class="cjm-rv">«900 свадеб, 5.0 — выглядит серьёзно»</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Конкуренты</div><div class="cjm-rv">Смотрит 3–5 агентств параллельно</div></div>
+        </div>
+        <div class="cjm-emo">🤔</div>
+      </div>
+      <div class="cjm-stage">
+        <div class="cjm-head" style="background:#8B1A1A;">⚠️ 3. Сайт (КРИТИЧНО)</div>
+        <div class="cjm-body">
+          <div class="cjm-row"><div class="cjm-rl">Hero</div><div class="cjm-rv">«Свадьба как в кино» — нет цифр</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Цены</div><div class="cjm-rv">«от 20 000» — он думает это за всё!</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Форма</div><div class="cjm-rv">CAPTCHA на мобайле → выходит</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Калькулятор</div><div class="cjm-rv">Скрыт в меню. Не мгновенный.</div></div>
+        </div>
+        <div class="cjm-emo">😟</div>
+        <div class="cjm-drop" style="background:#FFEBEE;color:var(--no);font-weight:700;">Уходит 97.5% → конкуренты</div>
+      </div>
+      <div class="cjm-stage">
+        <div class="cjm-head" style="background:#2A3A5A;">4. Заявка</div>
+        <div class="cjm-body">
+          <div class="cjm-row"><div class="cjm-rl">Действие</div><div class="cjm-rv">Оставляет контакты или TG</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Скорость ответа</div><div class="cjm-rv">Неизвестно (нет данных)</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Мысль</div><div class="cjm-rv">«Когда ответят? Смотрю других»</div></div>
+          <div class="cjm-row"><div class="cjm-rl">CR</div><div class="cjm-rv">~2.5% от трафика</div></div>
+        </div>
+        <div class="cjm-emo">😐</div>
+      </div>
+      <div class="cjm-stage">
+        <div class="cjm-head" style="background:#2A3A5A;">5. Консультация</div>
+        <div class="cjm-body">
+          <div class="cjm-row"><div class="cjm-rl">Формат</div><div class="cjm-rv">Встреча / звонок с менеджером</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Плюс</div><div class="cjm-rv">Отзывы: профессионалы, душевно</div></div>
+          <div class="cjm-row"><div class="cjm-rl">CR</div><div class="cjm-rv">35% из лидов</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Роман</div><div class="cjm-rv">Иногда присутствует лично</div></div>
+        </div>
+        <div class="cjm-emo">😊</div>
+      </div>
+      <div class="cjm-stage">
+        <div class="cjm-head" style="background:#8B1A1A;">⚠️ 6. Решение (КРИТИЧНО)</div>
+        <div class="cjm-body">
+          <div class="cjm-row"><div class="cjm-rl">Действие</div><div class="cjm-rv">Сравнивает с конкурентами</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Вопрос клиента</div><div class="cjm-rv">«Почему Darsy, а не Apriori 150К?»</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Риск</div><div class="cjm-rv">Нет якорного аргумента, нет фикса</div></div>
+          <div class="cjm-row"><div class="cjm-rl">CR</div><div class="cjm-rv">15% в сделку</div></div>
+        </div>
+        <div class="cjm-emo">😰</div>
+        <div class="cjm-drop" style="background:#FFEBEE;color:var(--no);font-weight:700;">Уходит 85% консультаций</div>
+      </div>
+      <div class="cjm-stage">
+        <div class="cjm-head" style="background:#1A4A2E;">7. Договор</div>
+        <div class="cjm-body">
+          <div class="cjm-row"><div class="cjm-rl">Действие</div><div class="cjm-rv">Подписывают, вносят предоплату</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Опыт работы</div><div class="cjm-rv">Судя по отзывам: 5/5</div></div>
+          <div class="cjm-row"><div class="cjm-rl">После свадьбы</div><div class="cjm-rv">Оставляют отзыв, рекомендуют</div></div>
+          <div class="cjm-row"><div class="cjm-rl">Упущено</div><div class="cjm-rv">Нет реф. программы!</div></div>
+        </div>
+        <div class="cjm-emo">🥰</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert-red">
+    <div class="at">Два места, где теряются деньги прямо сейчас</div>
+    <div class="ab"><b>Шаг 3 (сайт):</b> из 5 000 визитеров в месяц только 125 оставляют заявку (2.5%). Причины: CAPTCHA на формах, калькулятор спрятан в меню и не мгновенный, цена «от 20 000» создаёт неверное ожидание, три услуги некликабельны. Исправление = до 200 лидов в месяц на том же трафике.<br><br><b>Шаг 6 (решение):</b> 85% консультаций не закрываются в сделку. Причина: нет якорного ценового аргумента. Apriori говорит «150 000 — всё включено». Darsy говорит «12% — считайте сами». Клиент выбирает понятное. Фиксированный гонорар + пакетные предложения = +25–30% к конверсии консультации в сделку.</div>
+  </div>
+</section>
+
+<!-- AUDIT PAGES -->
+<section class="sec" id="audit">
+  <p class="ey">02 — Аудит 4 страниц</p>
+  <h2 class="sh">24 конкретные точки: проблема → решение → деньги</h2>
+  <div class="dv"></div>
+
+  <div class="stats4">
+    <div class="sbox"><div class="sv">24</div><div class="sl">Найденных проблем</div></div>
+    <div class="sbox"><div class="sv">+87%</div><div class="sl">Суммарный потенциал</div></div>
+    <div class="sbox"><div class="sv">0 ₽</div><div class="sl">Стоимость топ-2 фиксов</div></div>
+    <div class="sbox"><div class="sv">+5.8 млн</div><div class="sl">Потенциал выручки (топ-3)</div></div>
+  </div>
+
+  <div class="tabs" id="auditTabs"></div>
+  <div id="auditContent"></div>
+
+  <div class="chart-box">
+    <div class="ct">Потенциальный прирост конверсии по зонам</div>
+    <div class="cs">Красный = критичная проблема, оранжевый = важно, жёлтый = улучшение.</div>
+    <div class="cw" style="height:380px;"><canvas id="auditChart"></canvas></div>
+  </div>
+</section>
+
+<!-- TOP 3 PRIORITIES -->
+<section class="sec" id="top3">
+  <p class="ey">03 — Топ-3 приоритета</p>
+  <h2 class="sh">Что делать первым: максимум эффекта, минимум времени</h2>
+  <div class="dv"></div>
+  <p class="sd">Три исправления, которые дадут 80% результата. Два из трёх — бесплатно.</p>
+
+  <div class="prio3">
+    <div class="pc" style="border-top:4px solid var(--no);">
+      <div class="pc-n" style="color:var(--no);">01</div>
+      <div class="pc-t">Переписать страницу /ceny/ — убрать «от 20 000»</div>
+      <div class="pc-b">«Свадебный организатор от 20 000 руб» — клиент думает это стоимость всей организации. Это главная причина потери на этапе решения. Нужно: фиксированные пакеты с суммами (Базовый 120 т.р. / Стандарт 150 т.р. / Premium 200 т.р.) + расшифровка что входит. Apriori: 150 000 ₽ фиксированно — и растёт.</div>
+      <div class="pc-impact" style="color:var(--ok);">Стоимость: 0 ₽ · Срок: 1–2 нед. · Эффект: +1.5 сделок/мес = +2.2 млн ₽/год</div>
+    </div>
+    <div class="pc" style="border-top:4px solid var(--wr);">
+      <div class="pc-n" style="color:var(--wr);">02</div>
+      <div class="pc-t">Убрать CAPTCHA + sticky Telegram-кнопка</div>
+      <div class="pc-b">Три формы с CAPTCHA = трение на мобайле (60–70% трафика). Замена: форма без CAPTCHA (Яндекс SmartCaptcha на backend) + плавающая кнопка «Написать в Telegram» на мобайле. Telegram-лид конвертирует лучше формы: нет барьеров, есть диалог.</div>
+      <div class="pc-impact" style="color:var(--ok);">Стоимость: 20 т.р. · Срок: 1 нед. · Эффект: CR 2.5% → 3.2% = +35 лидов/мес</div>
+    </div>
+    <div class="pc" style="border-top:4px solid var(--g);">
+      <div class="pc-n" style="color:var(--g);">03</div>
+      <div class="pc-t">«5.0 / 220 отзывов» — в hero-блок на главной</div>
+      <div class="pc-b">220 отзывов 5.0 — лучший показатель из всех конкурентов. Сейчас это похоронено в нижней части страницы. Нужно в первый экран: логотип Яндекса + «5.0» + «220 отзывов» + 1 цитата рядом с CTA. A/B-тесты показывают: social proof в hero = +15–20% к CR формы.</div>
+      <div class="pc-impact" style="color:var(--ok);">Стоимость: 0 ₽ · Срок: 2–3 часа · Эффект: +7% к конверсии формы</div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <a href="competitors.html" class="btn btn-g">← Конкуренты</a>
+    <a href="hypotheses.html" class="btn btn-d">Далее: 10 гипотез →</a>
+  </div>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="fb">Darsy · Стратегический анализ 2026</div>
+  <div class="fs">Страница 3 из 5 &nbsp;·&nbsp;
+    <a href="darsy_today.html">← Сегодня</a>&ensp;
+    <a href="competitors.html">← Конкуренты</a>&ensp;
+    <a href="hypotheses.html">→ Гипотезы</a>&ensp;
+    <a href="roadmap.html">→ Карта</a>
+  </div>
+</footer>
+
+<script>
+var pages=[
+  {id:'main',label:'Главная',issues:[
+    {n:1,sev:1,zone:'Hero / CTA',prob:'«Свадьба как в кино» без цифр. Нет УТП. Конкуренты не отличить.',fix:'«900 свадеб в Москве. Ваша — следующая» + 5.0/220 отзывов в первый экран',note:'CR формы +8%',imp:'sev1'},
+    {n:2,sev:1,zone:'Форма / CAPTCHA',prob:'CAPTCHA на 3 формах = трение на мобайле (60–70% трафика). Клиент уходит.',fix:'1 форма + TG-кнопка + SmartCaptcha на backend. Убрать визуальный барьер.',note:'CR мобайл 1.2% → 2.5%',imp:'sev1'},
+    {n:3,sev:1,zone:'«от 20 000 руб»',prob:'Клиент читает «от 20 000» и думает: это стоимость всей организации. Ошибочное ожидание = отказ.',fix:'Убрать эту строку или переписать: «Гонорар агентства: от 120 000 руб. Что входит: …»',note:'+10–12% к конв. консультации',imp:'sev1'},
+    {n:4,sev:2,zone:'Калькулятор',prob:'Калькулятор есть, но скрыт в меню и не мгновенный (форма на 3 вопроса). Kate & Leo дают мгновенный результат.',fix:'Интерактивный калькулятор в первый экран главной. Мгновенный расчёт → лид-магнит.',note:'+15% к генерации лидов',imp:'sev2'},
+    {n:5,sev:2,zone:'Репутация',prob:'220 отзывов 5.0 Яндекс не видны в hero. Клиент не видит главный аргумент.',fix:'«★ 5.0 · 220 отзывов · Яндекс» + 1 цитата рядом с CTA-кнопкой.',note:'Social proof в hero: +15–20% CR',imp:'sev2'},
+    {n:6,sev:3,zone:'SEO Title',prob:'«Свадебное агентство в Москве» — без дифференциатора, конкурентный.',fix:'«Darsy: 900 свадеб в Москве. Гонорар от 120 000 ₽. ТОП-7»',note:'+5–8% CTR в Яндексе',imp:'sev3'},
+  ]},
+  {id:'portfolio',label:'Портфолио',issues:[
+    {n:1,sev:1,zone:'Нет фильтрации',prob:'Галерея без фильтров по бюджету, кол-ву гостей, типу площадки. Клиент не может найти «своё».',fix:'Фильтр: до 1 млн / 1–2 млн / 2+ млн · до 30 / 30–80 / 80+ гостей',note:'CR в заявку +9%',imp:'sev1'},
+    {n:2,sev:1,zone:'Нет бюджетов',prob:'«Артур и Лина» без информации: сколько гостей? Какой бюджет? Площадка?',fix:'Каждому кейсу: «50 гостей · Лофт · 1.8 млн ₽ · Май 2024»',note:'Снимает страх неизвестности +11%',imp:'sev1'},
+    {n:3,sev:2,zone:'Нет CTA в кейсе',prob:'Страница кейса заканчивается без призыва. Горячая аудитория уходит.',fix:'«Хочу похожую свадьбу → Получить смету» в каждом кейсе внизу.',note:'Горячий лид после просмотра +8%',imp:'sev2'},
+    {n:4,sev:2,zone:'SEO кейсов',prob:'URL: /portfolio/artur-lina/ — нет ключевых слов для Яндекса.',fix:'URL: /portfolio/svadba-v-lofte-50-gostey/ + SEO-заголовок в кейсе',note:'+SEO трафик на долгосрок',imp:'sev2'},
+    {n:5,sev:3,zone:'Видео-превью',prob:'Только фото. Видео-ролики на другой странице.',fix:'GIF или loop-video как превью карточек галереи',note:'Вовлечённость +40%',imp:'sev3'},
+    {n:6,sev:3,zone:'Перелинковка',prob:'Портфолио не ведёт на страницы услуг или площадок.',fix:'«Смотреть все свадьбы в лофте →» в каждом кейсе',note:'SEO-вес + конверсия',imp:'sev3'},
+  ]},
+  {id:'services',label:'Услуги',issues:[
+    {n:1,sev:1,zone:'3 некликабельных услуги',prob:'Музыкальные группы, Шоу-программа, Фото и видео — нет страниц. Клиент кликает → тишина. Потеря доверия.',fix:'Создать страницы с прайсом и примерами ИЛИ убрать из меню',note:'Потеря доверия = отказ',imp:'sev1'},
+    {n:2,sev:1,zone:'Нет пакетов',prob:'Нет разбивки Базовый / Стандарт / Premium с составом и ценой.',fix:'Три пакета: координация / частичная организация / под ключ + фиксированные суммы',note:'CR консультации в сделку +10%',imp:'sev1'},
+    {n:3,sev:2,zone:'Нет ценности',prob:'Карточки услуг — картинка + название. Нет описания что получает пара.',fix:'1–2 строки: «Мы берём на себя [что] → вы [наслаждаетесь чем]»',note:'+6% к доверию',imp:'sev2'},
+    {n:4,sev:2,zone:'Нет сравнения',prob:'«Распорядитель» vs «Под ключ» — нет понятного отличия для клиента.',fix:'Таблица: что входит, для кого, сколько стоит',note:'Снижает вопросы на консультации',imp:'sev2'},
+    {n:5,sev:3,zone:'Sticky CTA',prob:'Кнопка только внизу страницы. Большинство не долистывают.',fix:'Плавающая кнопка «Получить смету» при скролле от 40%',note:'+7% CR',imp:'sev3'},
+    {n:6,sev:3,zone:'Отзывы на странице',prob:'Нет контекстных отзывов рядом с конкретной услугой.',fix:'2–3 отзыва про «организацию под ключ» на соответствующей странице',note:'Контекстный social proof +5%',imp:'sev3'},
+  ]},
+  {id:'prices',label:'Цены',issues:[
+    {n:1,sev:1,zone:'«от 20 000 руб»',prob:'Это гонорар координатора, а не агентства за полную работу. Клиент строит ложное ожидание.',fix:'Переписать полностью: «Гонорар агентства — фиксированный, от 120 000 руб. Включает: [список]»',note:'Главная точка потери сделок',imp:'sev1'},
+    {n:2,sev:1,zone:'Нет пакетов',prob:'Нет ни одного пакета с фиксированной итоговой суммой. Клиент не может «посчитать заранее».',fix:'Минимум 3 пакета с фиксом. Пример: «Стандарт — 180 000 ₽ организация + бюджет от 850 т.р.»',note:'Apriori так делает — и растёт',imp:'sev1'},
+    {n:3,sev:1,zone:'Нет примеров смет',prob:'Нет реальных кейсов «вот свадьба X гостей на Y рублей — что вошло».',fix:'3 примера: 30 гостей / 50 гостей / 80 гостей с разбивкой по статьям',note:'Снимает главный страх клиента',imp:'sev1'},
+    {n:4,sev:2,zone:'Список без структуры',prob:'Длинный список позиций (ведущий, фото, видео, шоу) без группировки. Читать невозможно.',fix:'Группы: «Обязательные» / «Рекомендуем» / «По желанию» с ценовыми вилками',note:'Читаемость = доверие',imp:'sev2'},
+    {n:5,sev:2,zone:'Нет аргумента',prob:'Нет объяснения почему стоит выбрать Darsy а не сделать самим или взять дешевле.',fix:'Блок «Что вы экономите с Darsy»: время, нервы, деньги на ошибках подрядчиков',note:'+5% к закрытию',imp:'sev2'},
+    {n:6,sev:3,zone:'Скидка в будни',prob:'«10% скидка в будний день» написана мелко, неизвестно где. Клиент не видит.',fix:'Вынести в отдельный яркий блок рядом с кнопкой расчёта',note:'Может стать решающим аргументом',imp:'sev3'},
+  ]},
+];
+
+var activeTab='main';
+function buildTabs(){
+  var row=document.getElementById('auditTabs');
+  pages.forEach(function(p){
+    var b=document.createElement('button');
+    b.className='tab'+(p.id===activeTab?' on':'');
+    b.id='tb-'+p.id;
+    b.textContent=p.label;
+    b.onclick=function(){switchTab(p.id);};
+    row.appendChild(b);
+  });
+  renderAudit(activeTab);
+}
+function switchTab(id){
+  activeTab=id;
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.toggle('on',b.id==='tb-'+id);});
+  renderAudit(id);
+}
+function renderAudit(id){
+  var page=pages.find(function(p){return p.id===id;});
+  var con=document.getElementById('auditContent');
+  var sevClass={'sev1':'sev1','sev2':'sev2','sev3':'sev3'};
+  var aiClass={'sev1':'ai-r','sev2':'ai-o','sev3':'ai-g'};
+  var aiIcon={'sev1':'🚨 Критично','sev2':'⚠️ Важно','sev3':'💡 Улучшение'};
+  con.innerHTML='<div class="aud-wrap">'
+    +'<div class="aud-head a5"><div>#</div><div>Зона</div><div>Проблема (реальная)</div><div>Решение</div><div style="text-align:center">Эффект</div></div>'
+    +page.issues.map(function(r,i){
+      var bg=i%2===0?'':'background:#FAFAF8;';
+      return '<div class="aud-row a5 '+sevClass[r.imp]+'" style="'+bg+'">'
+        +'<div><div class="an">'+r.n+'</div></div>'
+        +'<div><div class="az">'+r.zone+'</div><div style="font-size:10px;color:var(--s);margin-top:3px;">'+r.note+'</div></div>'
+        +'<div><div class="ap">'+r.prob+'</div></div>'
+        +'<div><div class="af">→ '+r.fix+'</div></div>'
+        +'<div style="text-align:center"><span class="ai '+aiClass[r.imp]+'">'+aiIcon[r.imp]+'</span></div>'
+        +'</div>';
+    }).join('')+'</div>';
+}
+buildTabs();
+
+// Chart
+var chartLabels=['Фикс. гонорар и пакеты','Форма без CAPTCHA','Мгновенный калькулятор','Репутация в hero','Бюджеты в портфолио','Примеры смет','Фильтр портфолио','3 некликаб. услуги','CTA в кейсах','Скидка в будни видна'];
+var chartVals=[14,12,13,9,11,10,9,8,8,6];
+var chartColors=chartVals.map(function(v){return v>=13?'#AA2828':v>=11?'#E65100':'#C8964A';});
+new Chart(document.getElementById('auditChart'),{
+  type:'bar',
+  data:{labels:chartLabels,datasets:[{label:'Прирост конверсии %',data:chartVals,backgroundColor:chartColors,borderRadius:6}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(26,10,46,.92)',titleFont:{size:11},bodyFont:{size:11},padding:10,cornerRadius:8,callbacks:{label:function(c){return 'Прирост: до +'+c.raw+'%';}}}},
+    scales:{x:{beginAtZero:true,max:17,grid:{color:'#F0EBF8'},ticks:{color:'#8A8A9A',callback:function(v){return '+'+v+'%';}}},y:{grid:{display:false},ticks:{color:'#8A8A9A',font:{size:11}}}}}
+});
+</script>
+</body>
+</html>
